@@ -1,7 +1,13 @@
-import tables
 import macros
+
+import tables
+export tables
+
 import options
 export options
+
+import strutils
+export strutils
 
 import asyncdispatch
 export asyncdispatch
@@ -9,26 +15,35 @@ export asyncdispatch
 import httpx
 export httpx
 
+
+
 # var routes* {.compileTime.} = initTable[string, untyped]()
 var routes* {.compileTime.} = initTable[string, NimNode]()
 
 macro get* (route: string, body: untyped) =
-    echo("adding " & route.strVal())
-    routes[route.strVal()] = body
+    routes["GET:" & route.strVal()] = body
+
+macro post* (route: string, body: untyped) =
+    routes["POST:" & route.strVal()] = body
 
 macro createRoutes*(): untyped =
     result = newStmtList()
-    var routeCase = nnkCaseStmt.newTree(newIdentNode("path"))
+    var getCase = nnkCaseStmt.newTree(newIdentNode("path"))
+    var postCase = nnkCaseStmt.newTree(newIdentNode("path"))
+    
     for (route, body) in routes.pairs:
-        routeCase.add(
-            nnkOfBranch.newTree(newLit(route), body)
-        )
-    routeCase.add(
-        nnkElse.newTree(
-            parseStmt("req.send(Http404)")
-        )
-    )
-    result.add routeCase
+        let 
+            info = route.split(":")
+            httpMethod = info[0]
+            path = info[1]
+            
+        case httpMethod:
+        of "GET":
+            getCase.add(
+                nnkOfBranch.newTree(newLit(path), body)
+            )
+    result.add getCase
+    result.add parseStmt("send(Http404)")
     echo(astGenRepr(result))
 
 template send*(response: string) =
@@ -37,6 +52,7 @@ template send*(response: string) =
 template startServer*(): untyped {.dirty.} =
     proc handleRequest*(req: Request) {.async.} =
         let path = req.path.get()
-        # echo(path is string)
+        let httpMethod = req.path.get() 
+    
         createRoutes()
     run(handleRequest)
