@@ -1,0 +1,37 @@
+name: Docs
+
+on:
+  release:
+    types: 
+      - created
+  push:
+    tags: v*
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Cache choosenim
+      id: cache-choosenim
+      uses: actions/cache@v1
+      with:
+        path: ~/.choosenim
+        key: ${{ runner.os }}-choosenim-devel-latest
+        
+    - name: Setup Nim Enviroment
+      uses: actions/checkout@master
+    - uses: jiro4989/setup-nim-action@v1
+      with:
+        nim-version: 'devel'
+      
+    - name: Generate Documentation
+      run: nimble genDoc
+    
+    - name: deploy docs
+      uses: appleboy/gh-pages-action@master
+      with:
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        target_branch: master
+        target_directory: docs
+        remote_url: https://github.com/ire4ever1190/mike.git

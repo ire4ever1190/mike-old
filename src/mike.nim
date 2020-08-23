@@ -1,58 +1,79 @@
 import macros
 
+import uri
+
 import tables
 export tables
 
 import options
 export options
 
+import strformat
 import strutils
 export strutils
+
+include mike/routes
+include mike/testing
+include mike/helpers
 
 import asyncdispatch
 export asyncdispatch
 
+export json
+
 import httpx
 export httpx
 
-
-
-# var routes* {.compileTime.} = initTable[string, untyped]()
-var routes* {.compileTime.} = initTable[string, NimNode]()
-
-macro get* (route: string, body: untyped) =
-    routes["GET:" & route.strVal()] = body
-
-macro post* (route: string, body: untyped) =
-    routes["POST:" & route.strVal()] = body
-
 macro createRoutes*(): untyped =
     result = newStmtList()
-    var getCase = nnkCaseStmt.newTree(newIdentNode("path"))
-    var postCase = nnkCaseStmt.newTree(newIdentNode("path"))
+    var routeCase = nnkCaseStmt.newTree(parseStmt("$httpMethod & path"))
     
     for (route, body) in routes.pairs:
-        let 
-            info = route.split(":")
-            httpMethod = info[0]
-            path = info[1]
-            
-        case httpMethod:
-        of "GET":
-            getCase.add(
-                nnkOfBranch.newTree(newLit(path), body)
-            )
-    result.add getCase
-    result.add parseStmt("send(Http404)")
-    echo(astGenRepr(result))
+        routeCase.add(
+            nnkOfBranch.newTree(newLit(route), body)
+        )
 
-template send*(response: string) =
-    req.send(response)
-
-template startServer*(): untyped {.dirty.} =
-    proc handleRequest*(req: Request) {.async.} =
-        let path = req.path.get()
-        let httpMethod = req.path.get() 
+    result.add(
+        routeCase,
+        parseStmt("send(Http404)")
+    )
     
-        createRoutes()
-    run(handleRequest)
+proc parsePath*(path: string): tuple[path: string, query: Table[string, string]] =
+    if path.contains("?"):
+        let pathComponents = path.split("?", maxsplit=1)
+        result.path = pathComponents[0]
+        for param in pathComponents[1].split("&"):
+            let values = param.split("=", maxsplit=1)
+            result.query[values[0]] = decodeUrl(values[1])
+        return
+    result.path = path
+
+    
+template startServer*(serverPort: int = 8080, numOfThreads: int = 0): untyped {.dirty.} =
+    when not defined(testing):
+        proc handleRequest*(req: Request) {.async.} =
+            let (path, params) = parsePath(req.path.get())
+            let httpMethod = req.httpMethod.get()
+            
+            if defined(debug):
+                echo($httpMethod & " " & path & " " & $params)
+            try:
+                createRoutes()
+            except:
+                let
+                    e = getCurrentException()
+                    msg = getCurrentExceptionMsg()
+                echo "Got exception ", e.name, " with message ", msg    
+                send(Http500)
+    else:
+        proc handleRequest*(req: MockRequest): Response =
+            let (path, params) = parsePath(req.path)
+            let httpMethod = req.httpMethod
+                    
+            if defined(debug):
+                echo($httpMethod & " " & path & " " & $params)
+            createRoutes()
+        
+    let settings = initSettings(Port(serverPort), numThreads = numOfThreads)
+    when not defined(testing):
+       run(handleRequest)

@@ -1,12 +1,26 @@
-# This is just an example to get you started. You may wish to put all of your
-# tests into a single file, or separate them into multiple `test1`, `test2`
-# etc. files (better names are recommended, just make sure the name starts with
-# the letter 't').
-#
-# To run these tests, simply execute `nimble test`.
-
+import mike
 import unittest
 
-import mike
-test "can add":
-  check add(5, 5) == 10
+get "/":
+    send("hello")
+
+get "/echo":
+    # GET /echo?msg=hello
+    # response: hello
+    send(params["msg"])
+
+post "/json":
+    # POST /json body: {"msg": "hello"}
+    let body = json()
+    echo(body["msg"].getStr())
+    
+post "/form":
+    # POST /form body: msg=hello
+    let body = form()
+    send(body["msg"])
+
+startServer()
+
+test "Test Basic Test":
+    let response = getMock("/")
+    check(response.body == $Http200)
