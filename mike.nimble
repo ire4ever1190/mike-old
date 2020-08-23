@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.1.0"
+version       = "0.1.2"
 author        = "Jake Leahy"
 description   = "A very simple micro web framework"
 license       = "MIT"
@@ -17,7 +17,8 @@ task r, "runs the example":
 
 task genDoc, "Generates the doc":
     rmDir("docs")
-    exec("nim doc2 --outdir:docs --git.url:https://github.com/ire4ever1190/mike --git.commit:master --index:on --project src/mike.nim")
+    ## TODO only generate docs for helpers and stuff
+    exec("nimble doc2 --errorMax:0 --outdir:docs --git.url:https://github.com/ire4ever1190/mike --git.commit:master --index:on --project src/mike.nim")
     exec("nim buildIndex -o:docs/theindex.html docs")
     writeFile("docs/index.html", """
     <!DOCTYPE html>
@@ -30,3 +31,6 @@ task genDoc, "Generates the doc":
       </body>
     </html>
     """)
+
+task workspace, "Internal use, loads up all the files":
+    exec("micro src/mike.nim src/mike/*.nim")

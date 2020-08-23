@@ -1,0 +1,4 @@
+Response	mike/testing.html#Response	testing: Response	
+MockRequest	mike/testing.html#MockRequest	testing: MockRequest	
+makeGetMock	mike/testing.html#makeGetMock,string,Table[string,string]	testing: makeGetMock(path: string; headers: Table[string, string] = initTable()): MockRequest	
+getMock	mike/testing.html#getMock.t,string,Table[string,string]	testing: getMock(path: string; headers: Table[string, string] = initTable()): untyped	

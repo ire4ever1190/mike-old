@@ -11,11 +11,11 @@ get "/echo":
 post "/json":
     # POST /json body: {"msg": "hello"}
     let body = json()
-    echo(body["msg"].getStr())
+    send(body["msg"].getStr())
     
 post "/form":
     # POST /form body: msg=hello
-    let body = form()
-    send(body["msg"])
+    let form = form()
+    send(form["msg"])
 
 startServer()
