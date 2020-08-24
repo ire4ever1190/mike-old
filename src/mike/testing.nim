@@ -1,28 +1,29 @@
 import httpcore
-import tables
+import asyncfutures
 
 type Response* = object
     body*: string
     code*: HttpCode
-    headers*: Table[string, string]
+    headers*: string
 
 type MockRequest* = object
     httpMethod*: HttpMethod
     path*: string
     body*: string
-    headers*: Table[string, string]
-
-proc makeGetMock*(path: string, headers: Table[string, string] = initTable[string, string]()): MockRequest =
+    headers*: string
+    response*: Future[Response]
+    
+proc makeGetMock*(path: string, headers: string = ""): MockRequest =
     return MockRequest(
         httpMethod: HttpGet,
         path: path,
         headers: headers
     )
 
-template getMock*(path: string, headers: Table[string, string] = initTable[string, string]()): untyped =
-    handleRequest(makeGetMock(path, headers))
+template getMock*(path: string, headers: string = ""): untyped =
+    waitFor handleRequest(makeGetMock(path, headers))
 
-proc makePostMock*(path, body: string, headers: Table[string, string] = initTable[string, string]()): MockRequest =
+proc makePostMock*(path, body: string, headers: string = ""): MockRequest =
     return MockRequest(
         httpMethod: HttpPost,
         path: path,
@@ -30,5 +31,5 @@ proc makePostMock*(path, body: string, headers: Table[string, string] = initTabl
         headers: headers
     )
 
-template postMock*(path, body: string, headers: Table[string, string] = initTable[string, string]()): untyped =
-    handleRequest(makePostMock(path, body, headers))
+template postMock*(path, body: string, headers: string = ""): untyped =
+    waitFor handleRequest(makePostMock(path, body, headers))
