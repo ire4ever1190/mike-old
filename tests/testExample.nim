@@ -18,7 +18,7 @@ test "POST json":
 test "POST json response":
     let response = postMock("/jsonresponse", "")
     let headers = response.headers
-    check(headers == "application/json")
+    check(headers["content-type"] == "application/json")
 
 test "POST form request":
     let response = postMock("/form", form {

@@ -1,28 +1,23 @@
-import macros
-
 import uri
-
+import httpx
+import macros
 import tables
-export tables
-
 import options
-export options
-
-import strformat
 import strutils
-export strutils
+import strformat
+import asyncdispatch
 
 include mike/routes
 include mike/testing
 include mike/helpers
 
-import asyncdispatch
+export json
+export httpx
+export tables
+export options
+export strutils
 export asyncdispatch
 
-export json
-
-import httpx
-export httpx
 
 macro createRoutes*(): untyped =
     result = newStmtList()

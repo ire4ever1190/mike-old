@@ -14,7 +14,7 @@ post "/json":
     let body = json()
     send(body["msg"].getStr())
 
-post "/jsonresp":
+post "/jsonresponse":
     let body = %*{
         "fish": "fingers"
     }

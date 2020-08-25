@@ -21,15 +21,17 @@ macro simple(body: untyped): untyped =
 
 when not defined(testing):
     template body*(): untyped = getOrDefault(req.body)
-    template send*(reqBody: string, code: HttpCode = Http200, rHeaders: string = "") = req.send(code, reqBody, rHeaders)
+    template send*(reqBody: string, code: HttpCode = Http200, rHeaders: HttpHeaders = newHttpHeaders()) = req.send(code, reqBody, $rHeaders)
     template send*(code: HttpCode) = req.send(code)
 else: # Test methods need to use MockRequest
     template body*(): untyped = req.body
-    template send*(reqBody: string, hCode: HttpCode = Http200, rHeaders: string = "") = req.response.complete(Response(body: reqBody, code: hCode, headers: rHeaders))
+    template send*(reqBody: string, hCode: HttpCode = Http200, rHeaders: HttpHeaders = newHttpHeaders()) =
+         req.response.complete(Response(body: reqBody, code: hCode, headers: rHeaders))
     template send*(hCode: HttpCode): untyped = 
         if not req.response.finished(): # Used to handle error with send(Http404) completing the future again
             req.response.complete(Response(code: hCode))
-                    
+
+template headers*(): untyped = req.headers
 template json*(): untyped = parseJson(body())
 
 proc getOrDefault*[T](value: Option[T]): T =
@@ -42,18 +44,11 @@ proc form*(req: Request|MockRequest): Table[string, string] {.simple.} =
         let values = entry.split("=", maxsplit=1)
         result[values[0]] = decodeUrl(values[1])
 
-proc headers(headers: openarray[(string, string)]): string =
-    for header in headers:
-        result &= header[0] & ":" & header[1] & "\n"
-
-proc headers(resp: Response): Table[string, string] =
-    for header in resp.headers.split("\n"):
-        let values = header.split(":")
-        result[values[0]] = values[1]
+proc headers*(headers: openarray[(string, string)]): HttpHeaders {.inline.} = newHttpHeaders(headers)
 
 proc send*(req: Request|MockRequest, reqBody: JsonNode, hCode: HttpCode = Http200) = 
     let headers = headers {
-        "Content-Type": mimeDB.getExt("json")
+        "Content-Type": mimeDB.getMimeType("json")
     }
     send $reqBody, hCode, headers      
 

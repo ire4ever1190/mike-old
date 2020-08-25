@@ -1,29 +1,30 @@
 import httpcore
 import asyncfutures
+import tables
 
 type Response* = object
     body*: string
     code*: HttpCode
-    headers*: string
+    headers*: HttpHeaders
 
 type MockRequest* = object
     httpMethod*: HttpMethod
     path*: string
     body*: string
-    headers*: string
+    headers*: HttpHeaders
     response*: Future[Response]
     
-proc makeGetMock*(path: string, headers: string = ""): MockRequest =
+proc makeGetMock*(path: string, headers: HttpHeaders = newHttpHeaders()): MockRequest =
     return MockRequest(
         httpMethod: HttpGet,
         path: path,
         headers: headers
     )
 
-template getMock*(path: string, headers: string = ""): untyped =
+template getMock*(path: string, headers: HttpHeaders = newHttpHeaders()): untyped =
     waitFor handleRequest(makeGetMock(path, headers))
 
-proc makePostMock*(path, body: string, headers: string = ""): MockRequest =
+proc makePostMock*(path, body: string, headers: HttpHeaders = newHttpHeaders()): MockRequest =
     return MockRequest(
         httpMethod: HttpPost,
         path: path,
@@ -31,5 +32,5 @@ proc makePostMock*(path, body: string, headers: string = ""): MockRequest =
         headers: headers
     )
 
-template postMock*(path, body: string, headers: string = ""): untyped =
+template postMock*(path, body: string, headers: HttpHeaders = newHttpHeaders()): untyped =
     waitFor handleRequest(makePostMock(path, body, headers))
