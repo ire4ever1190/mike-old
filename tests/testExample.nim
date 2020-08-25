@@ -15,8 +15,8 @@ test "POST json":
     let response = postMock("/json", $ %*{"msg": "general kenobi"})
     check(response.body == "general kenobi")
 
-test "POST json response":
-    let response = postMock("/jsonresponse", "")
+test "GET json response":
+    let response = getMock("/jsonresponse")
     let headers = response.headers
     check(headers["content-type"] == "application/json")
 

@@ -8,9 +8,10 @@ import strformat
 import asyncdispatch
 
 include mike/routes
-include mike/testing
 include mike/helpers
-
+when defined(testing):
+    include mike/testing
+    
 export json
 export httpx
 export tables
@@ -20,10 +21,13 @@ export asyncdispatch
 
 
 macro createRoutes*(): untyped =
+    ## Gets all the routes from the global routes variable and puts them in a case tree
     result = newStmtList()
-    var routeCase = nnkCaseStmt.newTree(parseStmt("$httpMethod & path"))
+    var routeCase = nnkCaseStmt.newTree(parseStmt("$httpMethod & request.path"))
     
     for (route, body) in routes.pairs:
+        if defined(debug):
+            echo(route)
         routeCase.add(
             nnkOfBranch.newTree(newLit(route), body)
         )
@@ -33,25 +37,15 @@ macro createRoutes*(): untyped =
         parseStmt("send(Http404)")
     )
     
-proc parsePath*(path: string): tuple[path: string, query: Table[string, string]] =
-    if path.contains("?"):
-        let pathComponents = path.split("?", maxsplit=1)
-        result.path = pathComponents[0]
-        for param in pathComponents[1].split("&"):
-            let values = param.split("=", maxsplit=1)
-            result.query[values[0]] = decodeUrl(values[1])
-        return
-    result.path = path
-
-    
 template startServer*(serverPort: int = 8080, numOfThreads: int = 0): untyped {.dirty.} =
     when not defined(testing):
-        proc handleRequest*(req: Request) {.async.} =
-            let (path, params) = parsePath(req.path.get())
-            let httpMethod = req.httpMethod.get()
+        proc handleRequest*(req: Request) {.async, gcsafe.} =
+            var request = req.toRequest()            
+            
+            let httpMethod = request.httpMethod
             
             if defined(debug):
-                echo($httpMethod & " " & path & " " & $params)
+                echo($httpMethod & " " & request.path & " " & $request.queries)
             try:
                 createRoutes()
             except:
@@ -61,14 +55,15 @@ template startServer*(serverPort: int = 8080, numOfThreads: int = 0): untyped {.
                 echo "Got exception ", e.name, " with message ", msg    
                 send(Http500)
     else:
-        proc handleRequest*(req: MockRequest): owned(Future[Response]) =
-            req.response.unSafeaddr[] = newFuture[Response]("Request handling")
-            let (path, params) = parsePath(req.path)
-            let httpMethod = req.httpMethod
+        proc handleRequest*(request: MikeRequest): owned(Future[MikeResponse]) =
+            request.futResponse = newFuture[MikeResponse]("Request handling")
+            result = request.futResponse
+            request.response = newRespose()
+            let httpMethod = request.httpMethod
             if defined(debug):
-                echo($httpMethod & " " & path & " " & $params)
+                echo($httpMethod & " " & request.path & " " & $request.queries)
             createRoutes()
-            return req.response
+
     let settings = initSettings(Port(serverPort), numThreads = numOfThreads)
     when not defined(testing):
        run(handleRequest)

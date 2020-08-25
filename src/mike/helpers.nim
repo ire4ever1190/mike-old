@@ -1,14 +1,15 @@
 import json
 import uri
 import options
-import testing
 import macros
 import strformat
 import httpcore
-import httpx
+import request
 import strutils
 import tables
 import mimetypes
+
+export request
 
 let mimeDB = newMimeTypes()
 
@@ -16,44 +17,73 @@ macro simple(body: untyped): untyped =
     let name = body[0][1].strVal()
     return newStmtList(
         body,
-        parseStmt(fmt"template {name}*(): untyped = req.{name}()")
+        parseStmt(fmt"template {name}*(): untyped = request.{name}()")
     )
 
-when not defined(testing):
-    template body*(): untyped = getOrDefault(req.body)
-    template send*(reqBody: string, code: HttpCode = Http200, rHeaders: HttpHeaders = newHttpHeaders()) = req.send(code, reqBody, $rHeaders)
-    template send*(code: HttpCode) = req.send(code)
-else: # Test methods need to use MockRequest
-    template body*(): untyped = req.body
-    template send*(reqBody: string, hCode: HttpCode = Http200, rHeaders: HttpHeaders = newHttpHeaders()) =
-         req.response.complete(Response(body: reqBody, code: hCode, headers: rHeaders))
-    template send*(hCode: HttpCode): untyped = 
-        if not req.response.finished(): # Used to handle error with send(Http404) completing the future again
-            req.response.complete(Response(code: hCode))
+proc headerToString*(headers: HttpHeaders): string =
+    for header in headers.pairs:
+        result &= header.key & ": " & header.value 
 
-template headers*(): untyped = req.headers
-template json*(): untyped = parseJson(body())
+proc send*(request: MikeRequest, body: string = "", code: HttpCode = Http200, headers: HttpHeaders = newHttpHeaders()) =
+    # Merge the headers
+    for (key, value) in headers.pairs:
+            request.response.headers[key] = value
+
+    when defined(testing):
+        request.response.body = body
+        request.response.code = code
+        if not request.futResponse.finished():
+            request.futResponse.complete(request.response)
+    else:
+        request.req.send(code, body, headerToString request.response.headers)
+
+
+template send*(body: string, code: HttpCode = Http200, headers: HttpHeaders = newHttpHeaders()): untyped =
+    ## Respond back to the request
+    request.send(body, code, headers)
+    
+template send*(code: HttpCode, headers: HttpHeaders = newHttpHeaders()): untyped = 
+    ## Responds with just a HttpCode
+    request.send("", code, headers)
+
+template body*(): untyped = 
+    ## Gets the body of the request, returns an empty string if there is none
+    request.body
+
+template headers*(): untyped = 
+    ## Gets the headers from the request
+    request.headers
+    
+template json*(): untyped = 
+    ## Gets the json from the body
+    parseJson(body())
+
+template json*(obj: typedesc): untyped =
+    ## Gets json from the body and converts to a type
+    json().to(obj)
+
+
 
 proc getOrDefault*[T](value: Option[T]): T =
     ## Gets the value of Option[T] or else gets the default value of T
     if value.isSome:
         return value.get()
 
-proc form*(req: Request|MockRequest): Table[string, string] {.simple.} =
-    for entry in decodeUrl(body()).split("&"):
+proc form*(request: MikeRequest): Table[string, string] =
+    ## Gets the form data out of a request
+    for entry in decodeUrl(request.body).split("&"):
         let values = entry.split("=", maxsplit=1)
         result[values[0]] = decodeUrl(values[1])
 
 proc headers*(headers: openarray[(string, string)]): HttpHeaders {.inline.} = newHttpHeaders(headers)
 
-proc send*(req: Request|MockRequest, reqBody: JsonNode, hCode: HttpCode = Http200) = 
-    let headers = headers {
-        "Content-Type": mimeDB.getMimeType("json")
-    }
-    send $reqBody, hCode, headers      
+proc send*(request: MikeRequest, reqBody: JsonNode, hCode: HttpCode = Http200) =
+    ## Sends a json body 
+    request.response.headers["Content-Type"] = mimeDB.getMimeType("json")
+    request.send($reqBody, hCode) 
 
 template send*(reqBody: JsonNode, hCode: HttpCode = Http200) =
-    req.send(reqBody, hCode)
+    request.send(reqBody, hCode)
 
 proc form*(values: openarray[(string, string)]): string =
     ## Generates a x-www-form-urlencoded payload
