@@ -80,7 +80,7 @@ template startServer*(serverPort: int = 8080, numOfThreads: int = 1): untyped {.
             echo "Got exception ", e.name, " with message ", msg    
             send(Http500)
 
-    let settings = initSettings(Port(serverPort), numThreads = numOfThreads)
     when not defined(testing):
+        let settings = initSettings(Port(serverPort), numThreads = numOfThreads)
         echo("Mike is here to help")
-        run(handleRequest)
+        run(handleRequest, settings = settings)
