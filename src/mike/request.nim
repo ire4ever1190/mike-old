@@ -62,7 +62,6 @@ proc toRequest*(req: Request): MikeRequest =
     result = newRequest(req.httpMethod.get(), req.path.get())
     let body = req.body()
     if body.isSome:
-        echo("has body")
         result.body = body.get()
     else:
         result.body = ""

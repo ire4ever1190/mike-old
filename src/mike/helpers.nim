@@ -80,7 +80,7 @@ proc headers*(headers: openarray[(string, string)]): HttpHeaders {.inline.} = ne
 
 proc send*(request: MikeRequest, reqBody: JsonNode, hCode: HttpCode = Http200) =
     ## Sends a json body 
-    {.gcsafe.}:
+    {.gcsafe.}: # mimeDB is not GC safe but I never modify it
         request.response.headers["Content-Type"] = mimeDB.getMimeType("json")
         request.send($reqBody, hCode) 
 
