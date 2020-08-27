@@ -1,4 +1,5 @@
 ## Mike, The Mikro web framework
+![Tests](https://github.com/ire4ever1190/mike/workflows/Tests/badge.svg)
 
 very simple to use web framework for easy prototyping and rapid development
 

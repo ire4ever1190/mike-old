@@ -33,6 +33,7 @@ proc send*(request: MikeRequest, body: string = "", code: HttpCode = Http200, he
         request.response.body = body
         request.response.code = code
         if not request.futResponse.finished():
+            echo(request.response.body)
             request.futResponse.complete(request.response)
     else:
         request.req.send(code, body, headerToString request.response.headers)
