@@ -25,4 +25,4 @@ jobs:
         nim-version: 'devel'
       
     - name: Run Tests
-      run: nimble test
+      run: nimble update && nimble test
