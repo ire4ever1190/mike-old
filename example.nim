@@ -19,7 +19,7 @@ get "/echo":
 post "/json":
     # Get json from request
     let body = json()
-    request.send(body["msg"].getStr())
+    request.send(body["msg"].getStr()) # You can use the request object instead of using the templates
 
 get "/jsonresponse":
     # Send json back (With content type automatically set)
