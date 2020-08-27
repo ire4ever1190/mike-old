@@ -57,7 +57,7 @@ macro mockable*(prc: untyped): untyped =
     else:
         result = prc
 
-template startServer*(serverPort: int = 8080, numOfThreads: int = 0): untyped {.dirty.} =
+template startServer*(serverPort: int = 8080, numOfThreads: int = 1): untyped {.dirty.} =
     
     proc handleRequest*(req: Request): Future[void] {.mockable, async, gcsafe.} =
         when defined(testing):            
@@ -82,4 +82,5 @@ template startServer*(serverPort: int = 8080, numOfThreads: int = 0): untyped {.
 
     let settings = initSettings(Port(serverPort), numThreads = numOfThreads)
     when not defined(testing):
-       run(handleRequest)
+        echo("Mike is here to help")
+        run(handleRequest)
