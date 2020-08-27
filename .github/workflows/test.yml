@@ -8,7 +8,7 @@ on:
   
 
 jobs:
-  docs:
+  test:
     runs-on: ubuntu-latest
     steps:
     - name: Cache choosenim
