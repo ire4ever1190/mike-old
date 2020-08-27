@@ -1,11 +1,9 @@
 name: Tests
 
 on:
-  release:
-    types: 
-      - created
   push:
-    request
+    branches:
+    - main
 
 jobs:
   docs:
