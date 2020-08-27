@@ -11,7 +11,7 @@ import mimetypes
 
 export request
 
-let mimeDB = newMimeTypes()
+let mimeDB = newMimeTypes() 
 
 macro simple(body: untyped): untyped =
     let name = body[0][1].strVal()
@@ -80,8 +80,9 @@ proc headers*(headers: openarray[(string, string)]): HttpHeaders {.inline.} = ne
 
 proc send*(request: MikeRequest, reqBody: JsonNode, hCode: HttpCode = Http200) =
     ## Sends a json body 
-    request.response.headers["Content-Type"] = mimeDB.getMimeType("json")
-    request.send($reqBody, hCode) 
+    {.gcsafe.}:
+        request.response.headers["Content-Type"] = mimeDB.getMimeType("json")
+        request.send($reqBody, hCode) 
 
 template send*(reqBody: JsonNode, hCode: HttpCode = Http200) =
     request.send(reqBody, hCode)
