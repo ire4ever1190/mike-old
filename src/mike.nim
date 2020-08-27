@@ -50,7 +50,6 @@ macro mockable*(prc: untyped): untyped =
                     newIdentNode("MikeRequest"),
                     newEmptyNode()
                 )
-                echo(astGenRepr(node[0]))
             elif node.kind == nnkPragma:
                 node.del(0)
             result &= node

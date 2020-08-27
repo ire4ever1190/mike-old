@@ -3,37 +3,44 @@ import json
 import options
 import strformat
 
-type 
-    Person = object 
-        name: string
-        age:  int
+type
+    Person* = object 
+        name*: string
+        age*:  int
 
 get "/":
+    # Just a basic request
     send("hello")
 
 get "/echo":
-    # GET /echo?msg=hello
-    # response: hello
-    request.send(request.queries["msg"])
+    # Get query parameters
+    send(request.queries["msg"])
 
 post "/json":
-    # POST /json body: {"msg": "hello"}
+    # Get json from request
     let body = json()
     request.send(body["msg"].getStr())
 
 get "/jsonresponse":
+    # Send json back (With content type automatically set)
     let body = %*{
         "fish": "fingers"
     }
-    request.send(body)
+    send(body)
     
 post "/form":
-    # POST /form body: msg=hello
+    # get form data
     let form = request.form()
-    request.send(form["msg"])
+    send(form["msg"])
 
 post "/jsontype":
+    # Get json from request and turn it into an object
     let person = json(Person)
-    request.send(fmt"hello {person.name} who is aged {person.age}")
+    send(fmt"hello {person.name} who is aged {person.age}")
+
+get "/fred":
+    # Send an object back as json
+    let person = Person(name: "Fred", age: 54)
+    send(person)
 
 startServer()

@@ -18,7 +18,9 @@ test "POST json":
 test "GET json response":
     let response = getMock("/jsonresponse")
     let headers = response.headers
+    let responseJson = parseJson(response.body)
     check(headers["content-type"] == "application/json")
+    check(responseJson["fish"].getStr() == "fingers")
 
 test "POST form request":
     let response = postMock("/form", form {
@@ -26,3 +28,7 @@ test "POST form request":
     })
     check(response.body == "you are a bold one")
 
+test "GET object response":
+    let response = getMock("/fred")
+    let responseBody = parseJson(response.body).to(Person)
+    check(responseBody.name == "Fred")

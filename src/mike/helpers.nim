@@ -84,8 +84,11 @@ proc send*(request: MikeRequest, reqBody: JsonNode, hCode: HttpCode = Http200) =
         request.response.headers["Content-Type"] = mimeDB.getMimeType("json")
         request.send($reqBody, hCode) 
 
-template send*(reqBody: JsonNode, hCode: HttpCode = Http200) =
+template send*(reqBody: JsonNode, hCode: HttpCode = Http200): untyped =
     request.send(reqBody, hCode)
+
+template send*(reqBody: typed, hCode: HttpCode = Http200): untyped =
+    send(%*reqBody, hCode)
 
 proc form*(values: openarray[(string, string)]): string =
     ## Generates a x-www-form-urlencoded payload
