@@ -23,6 +23,7 @@ macro simple(body: untyped): untyped =
 proc headerToString*(headers: HttpHeaders): string =
     for header in headers.pairs:
         result &= header.key & ": " & header.value & "\c\L"
+    result.removePrefix("\c\L")
 
 proc send*(request: MikeRequest, body: string = "", code: HttpCode = Http200, headers: HttpHeaders = newHttpHeaders()) =
     # Merge the headers
