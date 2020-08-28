@@ -1,16 +1,17 @@
-routes	mike.html#routes	mike: routes	
-makeMethods	mike.html#makeMethods.m	mike: makeMethods(): untyped	
-head	mike.html#head.m,string,untyped	mike: head(route: string; body: untyped)	
-get	mike.html#get.m,string,untyped	mike: get(route: string; body: untyped)	
-post	mike.html#post.m,string,untyped	mike: post(route: string; body: untyped)	
-put	mike.html#put.m,string,untyped	mike: put(route: string; body: untyped)	
-delete	mike.html#delete.m,string,untyped	mike: delete(route: string; body: untyped)	
-trace	mike.html#trace.m,string,untyped	mike: trace(route: string; body: untyped)	
-options	mike.html#options.m,string,untyped	mike: options(route: string; body: untyped)	
-connect	mike.html#connect.m,string,untyped	mike: connect(route: string; body: untyped)	
-patch	mike.html#patch.m,string,untyped	mike: patch(route: string; body: untyped)	
-Response	mike.html#Response	mike: Response	
-MockRequest	mike.html#MockRequest	mike: MockRequest	
-makeGetMock	mike.html#makeGetMock,string,Table[string,string]	mike: makeGetMock(path: string; headers: Table[string, string] = initTable()): MockRequest	
-getMock	mike.html#getMock.t,string,Table[string,string]	mike: getMock(path: string; headers: Table[string, string] = initTable()): untyped	
-startServer	mike.html#startServer.t,int,int	mike: startServer(serverPort: int = 8080; numOfThreads: int = 0): untyped	
+headerToString	mike.html#headerToString,HttpHeaders	mike: headerToString(headers: HttpHeaders): string	
+send	mike.html#send,MikeRequest,string,HttpCode,HttpHeaders	mike: send(request: MikeRequest; body: string = &quot;&quot;; code: HttpCode = Http200;\n     headers: HttpHeaders = newHttpHeaders())	
+send	mike.html#send.t,string,HttpCode,HttpHeaders	mike: send(body: string; code: HttpCode = Http200; headers: HttpHeaders = newHttpHeaders()): untyped	
+send	mike.html#send.t,HttpCode,HttpHeaders	mike: send(code: HttpCode; headers: HttpHeaders = newHttpHeaders()): untyped	
+body	mike.html#body.t	mike: body(): untyped	
+headers	mike.html#headers.t	mike: headers(): untyped	
+json	mike.html#json.t	mike: json(): untyped	
+json	mike.html#json.t,typedesc	mike: json(obj: typedesc): untyped	
+getOrDefault	mike.html#getOrDefault,Option[T]	mike: getOrDefault[T](value: Option[T]): T	
+form	mike.html#form,MikeRequest	mike: form(request: MikeRequest): Table[string, string]	
+headers	mike.html#headers,openArray[]	mike: headers(headers: openArray[(string, string)]): HttpHeaders	
+send	mike.html#send,MikeRequest,JsonNode,HttpCode	mike: send(request: MikeRequest; reqBody: JsonNode; hCode: HttpCode = Http200)	
+send	mike.html#send.t,JsonNode,HttpCode	mike: send(reqBody: JsonNode; hCode: HttpCode = Http200): untyped	
+send	mike.html#send.t,typed,HttpCode	mike: send(reqBody: typed; hCode: HttpCode = Http200): untyped	
+form	mike.html#form,openArray[]	mike: form(values: openArray[(string, string)]): string	
+mockable	mike.html#mockable.m,untyped	mike: mockable(prc: untyped): untyped	
+startServer	mike.html#startServer.t,int,int	mike: startServer(serverPort: int = 8080; numOfThreads: int = 1): untyped	

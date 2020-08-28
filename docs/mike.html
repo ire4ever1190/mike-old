@@ -47,21 +47,12 @@ function main() {
 
   toggleSwitch.addEventListener('change', switchTheme, false);
 
+  const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
+  if (currentTheme) {
+    document.documentElement.setAttribute('data-theme', currentTheme);
 
-  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    document.documentElement.setAttribute('data-theme', "dark");
-    toggleSwitch.checked = true;
-  } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-    document.documentElement.setAttribute('data-theme', "light");
-    toggleSwitch.checked = false;
-  } else {
-    const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
-    if (currentTheme) {
-      document.documentElement.setAttribute('data-theme', currentTheme);
-
-      if (currentTheme === 'dark') {
-        toggleSwitch.checked = true;
-      }
+    if (currentTheme === 'dark') {
+      toggleSwitch.checked = true;
     }
   }
 }
@@ -83,6 +74,9 @@ function main() {
   </div>
   <div id="global-links">
     <ul class="simple">
+    <li>
+      <a href="theindex.html">Index</a>
+    </li>
     </ul>
   </div>
   <div id="searchInputDiv">
@@ -98,70 +92,68 @@ function main() {
   </div>
   <ul class="simple simple-toc" id="toc-list">
 <li>
-  <a class="reference reference-toplevel" href="#7" id="57">Types</a>
+  <a class="reference reference-toplevel" href="#6" id="56">Imports</a>
   <ul class="simple simple-toc-section">
-      <li><a class="reference" href="#Response"
-    title="Response = object
-  body*: string"><wbr />Response<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#MockRequest"
-    title="MockRequest = object
-  httpMethod*: HttpMethod
-  path*: string
-  body*: string
-  headers*: Table[string, string]"><wbr />Mock<wbr />Request<span class="attachedType"></span></a></li>
-
-  </ul>
-</li>
-<li>
-  <a class="reference reference-toplevel" href="#8" id="58">Vars</a>
-  <ul class="simple simple-toc-section">
-      <li><a class="reference" href="#routes"
-    title="routes = initTable(64)"><wbr />routes<span class="attachedType"></span></a></li>
-
+    
   </ul>
 </li>
 <li>
   <a class="reference reference-toplevel" href="#12" id="62">Procs</a>
   <ul class="simple simple-toc-section">
-      <li><a class="reference" href="#makeGetMock%2Cstring%2CTable%5Bstring%2Cstring%5D"
-    title="makeGetMock(path: string; headers: Table[string, string] = initTable()): MockRequest"><wbr />make<wbr />Get<wbr />Mock<span class="attachedType">MockRequest</span></a></li>
+      <li><a class="reference" href="#headerToString%2CHttpHeaders"
+    title="headerToString(headers: HttpHeaders): string"><wbr />header<wbr />To<wbr />String<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#send%2CMikeRequest%2Cstring%2CHttpCode%2CHttpHeaders"
+    title="send(request: MikeRequest; body: string = &quot;&quot;; code: HttpCode = Http200;
+     headers: HttpHeaders = newHttpHeaders())"><wbr />send<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#getOrDefault%2COption%5BT%5D"
+    title="getOrDefault[T](value: Option[T]): T"><wbr />get<wbr />Or<wbr />Default<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#form%2CMikeRequest"
+    title="form(request: MikeRequest): Table[string, string]"><wbr />form<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#headers%2CopenArray%5B%5D"
+    title="headers(headers: openArray[(string, string)]): HttpHeaders"><wbr />headers<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#send%2CMikeRequest%2CJsonNode%2CHttpCode"
+    title="send(request: MikeRequest; reqBody: JsonNode; hCode: HttpCode = Http200)"><wbr />send<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#form%2CopenArray%5B%5D"
+    title="form(values: openArray[(string, string)]): string"><wbr />form<span class="attachedType"></span></a></li>
 
   </ul>
 </li>
 <li>
   <a class="reference reference-toplevel" href="#17" id="67">Macros</a>
   <ul class="simple simple-toc-section">
-      <li><a class="reference" href="#makeMethods.m"
-    title="makeMethods(): untyped"><wbr />make<wbr />Methods<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#head.m%2Cstring%2Cuntyped"
-    title="head(route: string; body: untyped)"><wbr />head<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#get.m%2Cstring%2Cuntyped"
-    title="get(route: string; body: untyped)"><wbr />get<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#post.m%2Cstring%2Cuntyped"
-    title="post(route: string; body: untyped)"><wbr />post<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#put.m%2Cstring%2Cuntyped"
-    title="put(route: string; body: untyped)"><wbr />put<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#delete.m%2Cstring%2Cuntyped"
-    title="delete(route: string; body: untyped)"><wbr />delete<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#trace.m%2Cstring%2Cuntyped"
-    title="trace(route: string; body: untyped)"><wbr />trace<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#options.m%2Cstring%2Cuntyped"
-    title="options(route: string; body: untyped)"><wbr />options<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#connect.m%2Cstring%2Cuntyped"
-    title="connect(route: string; body: untyped)"><wbr />connect<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#patch.m%2Cstring%2Cuntyped"
-    title="patch(route: string; body: untyped)"><wbr />patch<span class="attachedType"></span></a></li>
+      <li><a class="reference" href="#mockable.m%2Cuntyped"
+    title="mockable(prc: untyped): untyped"><wbr />mockable<span class="attachedType"></span></a></li>
 
   </ul>
 </li>
 <li>
   <a class="reference reference-toplevel" href="#18" id="68">Templates</a>
   <ul class="simple simple-toc-section">
-      <li><a class="reference" href="#getMock.t%2Cstring%2CTable%5Bstring%2Cstring%5D"
-    title="getMock(path: string; headers: Table[string, string] = initTable()): untyped"><wbr />get<wbr />Mock<span class="attachedType"></span></a></li>
+      <li><a class="reference" href="#send.t%2Cstring%2CHttpCode%2CHttpHeaders"
+    title="send(body: string; code: HttpCode = Http200; headers: HttpHeaders = newHttpHeaders()): untyped"><wbr />send<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#send.t%2CHttpCode%2CHttpHeaders"
+    title="send(code: HttpCode; headers: HttpHeaders = newHttpHeaders()): untyped"><wbr />send<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#body.t"
+    title="body(): untyped"><wbr />body<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#headers.t"
+    title="headers(): untyped"><wbr />headers<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#json.t"
+    title="json(): untyped"><wbr />json<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#json.t%2Ctypedesc"
+    title="json(obj: typedesc): untyped"><wbr />json<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#send.t%2CJsonNode%2CHttpCode"
+    title="send(reqBody: JsonNode; hCode: HttpCode = Http200): untyped"><wbr />send<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#send.t%2Ctyped%2CHttpCode"
+    title="send(reqBody: typed; hCode: HttpCode = Http200): untyped"><wbr />send<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#startServer.t%2Cint%2Cint"
-    title="startServer(serverPort: int = 8080; numOfThreads: int = 0): untyped"><wbr />start<wbr />Server<span class="attachedType"></span></a></li>
+    title="startServer(serverPort: int = 8080; numOfThreads: int = 1): untyped"><wbr />start<wbr />Server<span class="attachedType"></span></a></li>
 
+  </ul>
+</li>
+<li>
+  <a class="reference reference-toplevel" href="#19" id="69">Exports</a>
+  <ul class="simple simple-toc-section">
+    
   </ul>
 </li>
 
@@ -172,69 +164,97 @@ function main() {
   <div id="tocRoot"></div>
   
   <p class="module-desc"></p>
-  <div class="section" id="7">
-<h1><a class="toc-backref" href="#7">Types</a></h1>
+  <div class="section" id="6">
+<h1><a class="toc-backref" href="#6">Imports</a></h1>
 <dl class="item">
-<a id="Response"></a>
-<dt><pre><a href="mike.html#Response"><span class="Identifier">Response</span></a> <span class="Other">=</span> <span class="Keyword">object</span>
-  <span class="Identifier">body</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">string</span>
-</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/ire4ever1190/mike/tree/master/src/mike/testing.nim#L4"
-class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/testing.nim#L4" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-<a id="MockRequest"></a>
-<dt><pre><a href="mike.html#MockRequest"><span class="Identifier">MockRequest</span></a> <span class="Other">=</span> <span class="Keyword">object</span>
-  <span class="Identifier">httpMethod</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">HttpMethod</span>
-  <span class="Identifier">path</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">string</span>
-  <span class="Identifier">body</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">string</span>
-  <span class="Identifier">headers</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">Table</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">,</span> <span class="Identifier">string</span><span class="Other">]</span>
-</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/ire4ever1190/mike/tree/master/src/mike/testing.nim#L7"
-class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/testing.nim#L7" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-
-</dl></div>
-<div class="section" id="8">
-<h1><a class="toc-backref" href="#8">Vars</a></h1>
-<dl class="item">
-<a id="routes"></a>
-<dt><pre><a href="mike.html#routes"><span class="Identifier">routes</span></a> <span class="Other">=</span> <span class="Identifier">initTable</span><span class="Other">(</span><span class="DecNumber">64</span><span class="Other">)</span></pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/ire4ever1190/mike/tree/master/src/mike/routes.nim#L3"
-class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/routes.nim#L3" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-
+<a class="reference external" href="mike/request.html">mike/request</a>
 </dl></div>
 <div class="section" id="12">
 <h1><a class="toc-backref" href="#12">Procs</a></h1>
 <dl class="item">
-<a id="makeGetMock,string,Table[string,string]"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#makeGetMock%2Cstring%2CTable%5Bstring%2Cstring%5D"><span class="Identifier">makeGetMock</span></a><span class="Other">(</span><span class="Identifier">path</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">headers</span><span class="Other">:</span> <span class="Identifier">Table</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">,</span> <span class="Identifier">string</span><span class="Other">]</span> <span class="Other">=</span> <span class="Identifier">initTable</span><span class="Other">(</span><span class="Other">)</span><span class="Other">)</span><span class="Other">:</span> <a href="mike.html#MockRequest"><span class="Identifier">MockRequest</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
-    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<a id="headerToString,HttpHeaders"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#headerToString%2CHttpHeaders"><span class="Identifier">headerToString</span></a><span class="Other">(</span><span class="Identifier">headers</span><span class="Other">:</span> <span class="Identifier">HttpHeaders</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/ire4ever1190/mike/tree/master/src/mike/testing.nim#L13"
+href="https://github.com/ire4ever1190/mike/tree/master/src/mike/helpers.nim#L23"
 class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/testing.nim#L13" class="link-seesrc" target="_blank" >Edit</a>
+<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/helpers.nim#L23" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+<a id="send,MikeRequest,string,HttpCode,HttpHeaders"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#send%2CMikeRequest%2Cstring%2CHttpCode%2CHttpHeaders"><span class="Identifier">send</span></a><span class="Other">(</span><span class="Identifier">request</span><span class="Other">:</span> <a href="mike/request.html#MikeRequest"><span class="Identifier">MikeRequest</span></a><span class="Other">;</span> <span class="Identifier">body</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Other">=</span> <span class="StringLit">&quot;&quot;</span><span class="Other">;</span> <span class="Identifier">code</span><span class="Other">:</span> <span class="Identifier">HttpCode</span> <span class="Other">=</span> <span class="Identifier">Http200</span><span class="Other">;</span>
+         <span class="Identifier">headers</span><span class="Other">:</span> <span class="Identifier">HttpHeaders</span> <span class="Other">=</span> <span class="Identifier">newHttpHeaders</span><span class="Other">(</span><span class="Other">)</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/ire4ever1190/mike/tree/master/src/mike/helpers.nim#L27"
+class="link-seesrc" target="_blank">Source</a>
+<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/helpers.nim#L27" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+<a id="getOrDefault,Option[T]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#getOrDefault%2COption%5BT%5D"><span class="Identifier">getOrDefault</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">value</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">T</span></pre></dt>
+<dd>
+
+Gets the value of Option[T] or else gets the default value of T
+&nbsp;&nbsp;<a
+href="https://github.com/ire4ever1190/mike/tree/master/src/mike/helpers.nim#L67"
+class="link-seesrc" target="_blank">Source</a>
+<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/helpers.nim#L67" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+<a id="form,MikeRequest"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#form%2CMikeRequest"><span class="Identifier">form</span></a><span class="Other">(</span><span class="Identifier">request</span><span class="Other">:</span> <a href="mike/request.html#MikeRequest"><span class="Identifier">MikeRequest</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Table</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">,</span> <span class="Identifier">string</span><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Gets the form data out of a request
+&nbsp;&nbsp;<a
+href="https://github.com/ire4ever1190/mike/tree/master/src/mike/helpers.nim#L72"
+class="link-seesrc" target="_blank">Source</a>
+<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/helpers.nim#L72" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+<a id="headers,openArray[]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#headers%2CopenArray%5B%5D"><span class="Identifier">headers</span></a><span class="Other">(</span><span class="Identifier">headers</span><span class="Other">:</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Other">(</span><span class="Identifier">string</span><span class="Other">,</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">HttpHeaders</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span>
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/ire4ever1190/mike/tree/master/src/mike/helpers.nim#L78"
+class="link-seesrc" target="_blank">Source</a>
+<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/helpers.nim#L78" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+<a id="send,MikeRequest,JsonNode,HttpCode"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#send%2CMikeRequest%2CJsonNode%2CHttpCode"><span class="Identifier">send</span></a><span class="Other">(</span><span class="Identifier">request</span><span class="Other">:</span> <a href="mike/request.html#MikeRequest"><span class="Identifier">MikeRequest</span></a><span class="Other">;</span> <span class="Identifier">reqBody</span><span class="Other">:</span> <span class="Identifier">JsonNode</span><span class="Other">;</span> <span class="Identifier">hCode</span><span class="Other">:</span> <span class="Identifier">HttpCode</span> <span class="Other">=</span> <span class="Identifier">Http200</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Sends a json body 
+&nbsp;&nbsp;<a
+href="https://github.com/ire4ever1190/mike/tree/master/src/mike/helpers.nim#L80"
+class="link-seesrc" target="_blank">Source</a>
+<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/helpers.nim#L80" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+<a id="form,openArray[]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#form%2CopenArray%5B%5D"><span class="Identifier">form</span></a><span class="Other">(</span><span class="Identifier">values</span><span class="Other">:</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Other">(</span><span class="Identifier">string</span><span class="Other">,</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Generates a x-www-form-urlencoded payload
+<p><strong class="examples_text">Example:</strong></p>
+<pre class="listing"><span class="Keyword">let</span><span class="Whitespace"> </span><span class="Identifier">payload</span><span class="Whitespace"> </span><span class="Operator">=</span><span class="Whitespace"> </span><span class="Identifier">form</span><span class="Whitespace"> </span><span class="Punctuation">{</span><span class="Whitespace">
+    </span><span class="StringLit">&quot;msg&quot;</span><span class="Punctuation">:</span><span class="Whitespace"> </span><span class="StringLit">&quot;hello&quot;</span><span class="Whitespace">
+</span><span class="Punctuation">}</span><span class="Whitespace">
+</span><span class="Identifier">doAssert</span><span class="Whitespace"> </span><span class="Identifier">payload</span><span class="Whitespace"> </span><span class="Operator">=</span><span class="Whitespace"> </span><span class="StringLit">&quot;msg=hello&quot;</span></pre>
+&nbsp;&nbsp;<a
+href="https://github.com/ire4ever1190/mike/tree/master/src/mike/helpers.nim#L92"
+class="link-seesrc" target="_blank">Source</a>
+<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/helpers.nim#L92" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 
@@ -242,114 +262,15 @@ class="link-seesrc" target="_blank">Source</a>
 <div class="section" id="17">
 <h1><a class="toc-backref" href="#17">Macros</a></h1>
 <dl class="item">
-<a id="makeMethods.m"></a>
-<dt><pre><span class="Keyword">macro</span> <a href="#makeMethods.m"><span class="Identifier">makeMethods</span></a><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
+<a id="mockable.m,untyped"></a>
+<dt><pre><span class="Keyword">macro</span> <a href="#mockable.m%2Cuntyped"><span class="Identifier">mockable</span></a><span class="Other">(</span><span class="Identifier">prc</span><span class="Other">:</span> <span class="Identifier">untyped</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
 <dd>
 
-
+Changes the handleRequest proc to use MockRequest Just changes the input and return type along with moving the async pragma 
 &nbsp;&nbsp;<a
-href="https://github.com/ire4ever1190/mike/tree/master/src/mike/routes.nim#L5"
+href="https://github.com/ire4ever1190/mike/tree/master/src/mike.nim#L38"
 class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/routes.nim#L5" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-<a id="head.m,string,untyped"></a>
-<dt><pre><span class="Keyword">macro</span> <a href="#head.m%2Cstring%2Cuntyped"><span class="Identifier">head</span></a><span class="Other">(</span><span class="Identifier">route</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">body</span><span class="Other">:</span> <span class="Identifier">untyped</span><span class="Other">)</span></pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/ire4ever1190/mike/tree/master/../../.choosenim/toolchains/nim-1.2.6/lib/core/macros.nim#L564"
-class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/ire4ever1190/mike/edit/devel/../../.choosenim/toolchains/nim-1.2.6/lib/core/macros.nim#L564" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-<a id="get.m,string,untyped"></a>
-<dt><pre><span class="Keyword">macro</span> <a href="#get.m%2Cstring%2Cuntyped"><span class="Identifier">get</span></a><span class="Other">(</span><span class="Identifier">route</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">body</span><span class="Other">:</span> <span class="Identifier">untyped</span><span class="Other">)</span></pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/ire4ever1190/mike/tree/master/../../.choosenim/toolchains/nim-1.2.6/lib/core/macros.nim#L564"
-class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/ire4ever1190/mike/edit/devel/../../.choosenim/toolchains/nim-1.2.6/lib/core/macros.nim#L564" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-<a id="post.m,string,untyped"></a>
-<dt><pre><span class="Keyword">macro</span> <a href="#post.m%2Cstring%2Cuntyped"><span class="Identifier">post</span></a><span class="Other">(</span><span class="Identifier">route</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">body</span><span class="Other">:</span> <span class="Identifier">untyped</span><span class="Other">)</span></pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/ire4ever1190/mike/tree/master/../../.choosenim/toolchains/nim-1.2.6/lib/core/macros.nim#L564"
-class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/ire4ever1190/mike/edit/devel/../../.choosenim/toolchains/nim-1.2.6/lib/core/macros.nim#L564" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-<a id="put.m,string,untyped"></a>
-<dt><pre><span class="Keyword">macro</span> <a href="#put.m%2Cstring%2Cuntyped"><span class="Identifier">put</span></a><span class="Other">(</span><span class="Identifier">route</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">body</span><span class="Other">:</span> <span class="Identifier">untyped</span><span class="Other">)</span></pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/ire4ever1190/mike/tree/master/../../.choosenim/toolchains/nim-1.2.6/lib/core/macros.nim#L564"
-class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/ire4ever1190/mike/edit/devel/../../.choosenim/toolchains/nim-1.2.6/lib/core/macros.nim#L564" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-<a id="delete.m,string,untyped"></a>
-<dt><pre><span class="Keyword">macro</span> <a href="#delete.m%2Cstring%2Cuntyped"><span class="Identifier">delete</span></a><span class="Other">(</span><span class="Identifier">route</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">body</span><span class="Other">:</span> <span class="Identifier">untyped</span><span class="Other">)</span></pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/ire4ever1190/mike/tree/master/../../.choosenim/toolchains/nim-1.2.6/lib/core/macros.nim#L564"
-class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/ire4ever1190/mike/edit/devel/../../.choosenim/toolchains/nim-1.2.6/lib/core/macros.nim#L564" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-<a id="trace.m,string,untyped"></a>
-<dt><pre><span class="Keyword">macro</span> <a href="#trace.m%2Cstring%2Cuntyped"><span class="Identifier">trace</span></a><span class="Other">(</span><span class="Identifier">route</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">body</span><span class="Other">:</span> <span class="Identifier">untyped</span><span class="Other">)</span></pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/ire4ever1190/mike/tree/master/../../.choosenim/toolchains/nim-1.2.6/lib/core/macros.nim#L564"
-class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/ire4ever1190/mike/edit/devel/../../.choosenim/toolchains/nim-1.2.6/lib/core/macros.nim#L564" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-<a id="options.m,string,untyped"></a>
-<dt><pre><span class="Keyword">macro</span> <a href="#options.m%2Cstring%2Cuntyped"><span class="Identifier">options</span></a><span class="Other">(</span><span class="Identifier">route</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">body</span><span class="Other">:</span> <span class="Identifier">untyped</span><span class="Other">)</span></pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/ire4ever1190/mike/tree/master/../../.choosenim/toolchains/nim-1.2.6/lib/core/macros.nim#L564"
-class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/ire4ever1190/mike/edit/devel/../../.choosenim/toolchains/nim-1.2.6/lib/core/macros.nim#L564" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-<a id="connect.m,string,untyped"></a>
-<dt><pre><span class="Keyword">macro</span> <a href="#connect.m%2Cstring%2Cuntyped"><span class="Identifier">connect</span></a><span class="Other">(</span><span class="Identifier">route</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">body</span><span class="Other">:</span> <span class="Identifier">untyped</span><span class="Other">)</span></pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/ire4ever1190/mike/tree/master/../../.choosenim/toolchains/nim-1.2.6/lib/core/macros.nim#L564"
-class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/ire4ever1190/mike/edit/devel/../../.choosenim/toolchains/nim-1.2.6/lib/core/macros.nim#L564" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-<a id="patch.m,string,untyped"></a>
-<dt><pre><span class="Keyword">macro</span> <a href="#patch.m%2Cstring%2Cuntyped"><span class="Identifier">patch</span></a><span class="Other">(</span><span class="Identifier">route</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">body</span><span class="Other">:</span> <span class="Identifier">untyped</span><span class="Other">)</span></pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/ire4ever1190/mike/tree/master/src/mike/routes.nim#L11"
-class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/routes.nim#L11" class="link-seesrc" target="_blank" >Edit</a>
+<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike.nim#L38" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 
@@ -357,29 +278,112 @@ class="link-seesrc" target="_blank">Source</a>
 <div class="section" id="18">
 <h1><a class="toc-backref" href="#18">Templates</a></h1>
 <dl class="item">
-<a id="getMock.t,string,Table[string,string]"></a>
-<dt><pre><span class="Keyword">template</span> <a href="#getMock.t%2Cstring%2CTable%5Bstring%2Cstring%5D"><span class="Identifier">getMock</span></a><span class="Other">(</span><span class="Identifier">path</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">headers</span><span class="Other">:</span> <span class="Identifier">Table</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">,</span> <span class="Identifier">string</span><span class="Other">]</span> <span class="Other">=</span> <span class="Identifier">initTable</span><span class="Other">(</span><span class="Other">)</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
+<a id="send.t,string,HttpCode,HttpHeaders"></a>
+<dt><pre><span class="Keyword">template</span> <a href="#send.t%2Cstring%2CHttpCode%2CHttpHeaders"><span class="Identifier">send</span></a><span class="Other">(</span><span class="Identifier">body</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">code</span><span class="Other">:</span> <span class="Identifier">HttpCode</span> <span class="Other">=</span> <span class="Identifier">Http200</span><span class="Other">;</span>
+             <span class="Identifier">headers</span><span class="Other">:</span> <span class="Identifier">HttpHeaders</span> <span class="Other">=</span> <span class="Identifier">newHttpHeaders</span><span class="Other">(</span><span class="Other">)</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
+<dd>
+
+Respond back to the request
+&nbsp;&nbsp;<a
+href="https://github.com/ire4ever1190/mike/tree/master/src/mike/helpers.nim#L41"
+class="link-seesrc" target="_blank">Source</a>
+<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/helpers.nim#L41" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+<a id="send.t,HttpCode,HttpHeaders"></a>
+<dt><pre><span class="Keyword">template</span> <a href="#send.t%2CHttpCode%2CHttpHeaders"><span class="Identifier">send</span></a><span class="Other">(</span><span class="Identifier">code</span><span class="Other">:</span> <span class="Identifier">HttpCode</span><span class="Other">;</span> <span class="Identifier">headers</span><span class="Other">:</span> <span class="Identifier">HttpHeaders</span> <span class="Other">=</span> <span class="Identifier">newHttpHeaders</span><span class="Other">(</span><span class="Other">)</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
+<dd>
+
+Responds with just a HttpCode
+&nbsp;&nbsp;<a
+href="https://github.com/ire4ever1190/mike/tree/master/src/mike/helpers.nim#L45"
+class="link-seesrc" target="_blank">Source</a>
+<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/helpers.nim#L45" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+<a id="body.t"></a>
+<dt><pre><span class="Keyword">template</span> <a href="#body.t"><span class="Identifier">body</span></a><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
+<dd>
+
+Gets the body of the request, returns an empty string if there is none
+&nbsp;&nbsp;<a
+href="https://github.com/ire4ever1190/mike/tree/master/src/mike/helpers.nim#L49"
+class="link-seesrc" target="_blank">Source</a>
+<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/helpers.nim#L49" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+<a id="headers.t"></a>
+<dt><pre><span class="Keyword">template</span> <a href="#headers.t"><span class="Identifier">headers</span></a><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
+<dd>
+
+Gets the headers from the request
+&nbsp;&nbsp;<a
+href="https://github.com/ire4ever1190/mike/tree/master/src/mike/helpers.nim#L53"
+class="link-seesrc" target="_blank">Source</a>
+<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/helpers.nim#L53" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+<a id="json.t"></a>
+<dt><pre><span class="Keyword">template</span> <a href="#json.t"><span class="Identifier">json</span></a><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
+<dd>
+
+Gets the json from the body
+&nbsp;&nbsp;<a
+href="https://github.com/ire4ever1190/mike/tree/master/src/mike/helpers.nim#L57"
+class="link-seesrc" target="_blank">Source</a>
+<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/helpers.nim#L57" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+<a id="json.t,typedesc"></a>
+<dt><pre><span class="Keyword">template</span> <a href="#json.t%2Ctypedesc"><span class="Identifier">json</span></a><span class="Other">(</span><span class="Identifier">obj</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
+<dd>
+
+Gets json from the body and converts to a type
+&nbsp;&nbsp;<a
+href="https://github.com/ire4ever1190/mike/tree/master/src/mike/helpers.nim#L61"
+class="link-seesrc" target="_blank">Source</a>
+<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/helpers.nim#L61" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+<a id="send.t,JsonNode,HttpCode"></a>
+<dt><pre><span class="Keyword">template</span> <a href="#send.t%2CJsonNode%2CHttpCode"><span class="Identifier">send</span></a><span class="Other">(</span><span class="Identifier">reqBody</span><span class="Other">:</span> <span class="Identifier">JsonNode</span><span class="Other">;</span> <span class="Identifier">hCode</span><span class="Other">:</span> <span class="Identifier">HttpCode</span> <span class="Other">=</span> <span class="Identifier">Http200</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
 <dd>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/ire4ever1190/mike/tree/master/src/mike/testing.nim#L20"
+href="https://github.com/ire4ever1190/mike/tree/master/src/mike/helpers.nim#L86"
 class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/testing.nim#L20" class="link-seesrc" target="_blank" >Edit</a>
+<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/helpers.nim#L86" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+<a id="send.t,typed,HttpCode"></a>
+<dt><pre><span class="Keyword">template</span> <a href="#send.t%2Ctyped%2CHttpCode"><span class="Identifier">send</span></a><span class="Other">(</span><span class="Identifier">reqBody</span><span class="Other">:</span> <span class="Identifier">typed</span><span class="Other">;</span> <span class="Identifier">hCode</span><span class="Other">:</span> <span class="Identifier">HttpCode</span> <span class="Other">=</span> <span class="Identifier">Http200</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/ire4ever1190/mike/tree/master/src/mike/helpers.nim#L89"
+class="link-seesrc" target="_blank">Source</a>
+<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/helpers.nim#L89" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 <a id="startServer.t,int,int"></a>
-<dt><pre><span class="Keyword">template</span> <a href="#startServer.t%2Cint%2Cint"><span class="Identifier">startServer</span></a><span class="Other">(</span><span class="Identifier">serverPort</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">8080</span><span class="Other">;</span> <span class="Identifier">numOfThreads</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">dirty</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">template</span> <a href="#startServer.t%2Cint%2Cint"><span class="Identifier">startServer</span></a><span class="Other">(</span><span class="Identifier">serverPort</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">8080</span><span class="Other">;</span> <span class="Identifier">numOfThreads</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">1</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">dirty</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/ire4ever1190/mike/tree/master/src/mike.nim#L52"
+href="https://github.com/ire4ever1190/mike/tree/master/src/mike.nim#L57"
 class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike.nim#L52" class="link-seesrc" target="_blank" >Edit</a>
+<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike.nim#L57" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 
+</dl></div>
+<div class="section" id="19">
+<h1><a class="toc-backref" href="#19">Exports</a></h1>
+<dl class="item">
+<a href="mike/request.html#parsePath"><span class="Identifier">parsePath</span></a>, <a href="mike/request.html#newResponse"><span class="Identifier">newResponse</span></a>, <a href="mike/request.html#MikeRequest"><span class="Identifier">MikeRequest</span></a>, <a href="mike/request.html#MikeResponse"><span class="Identifier">MikeResponse</span></a>, <a href="mike/request.html#newRequest"><span class="Identifier">newRequest</span></a>, <a class="reference external" href="mike/request.html">mike/request</a>, <a href="mike/request.html#toRequest"><span class="Identifier">toRequest</span></a>
 </dl></div>
 
   </div>
@@ -389,7 +393,7 @@ class="link-seesrc" target="_blank">Source</a>
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2020-08-23 08:07:54 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2020-08-28 06:30:26 UTC</small>
       </div>
     </div>
   </div>

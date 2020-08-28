@@ -32,3 +32,7 @@ test "GET object response":
     let response = getMock("/fred")
     let responseBody = parseJson(response.body).to(Person)
     check(responseBody.name == "Fred")
+
+test "GET 404":
+    let response = getMock("/404")
+    check response.code == Http404

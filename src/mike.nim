@@ -22,19 +22,17 @@ export asyncdispatch
 
 macro createRoutes*(): untyped =
     ## Gets all the routes from the global routes variable and puts them in a case tree
-    result = newStmtList()
     var routeCase = nnkCaseStmt.newTree(parseExpr("$httpMethod & request.path"))
     
     for (route, body) in routes.pairs:
         routeCase.add(
             nnkOfBranch.newTree(newLit(route), body)
         )
-
-    result.add(
-        routeCase,
-        parseStmt("send(Http404)")
+    routeCase.add(
+        nnkElse.newTree(parseExpr("send(Http404)"))
     )
-    
+    result = routeCase
+
 macro mockable*(prc: untyped): untyped =
     ## Changes the handleRequest proc to use MockRequest
     ## Just changes the input and return type along with moving the async pragma 
