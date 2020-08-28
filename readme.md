@@ -12,6 +12,7 @@ get "/":
 startServer()
 ```
 take a look a the [example](https://github.com/ire4ever1190/mike/blob/master/example.nim) for more info
+
 testing is also easy with the built in mock testing
 just have `-d:testing` defined somewhere when running your tests and you will be able to mock test like so
 
