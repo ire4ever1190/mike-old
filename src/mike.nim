@@ -26,8 +26,6 @@ macro createRoutes*(): untyped =
     var routeCase = nnkCaseStmt.newTree(parseExpr("$httpMethod & request.path"))
     
     for (route, body) in routes.pairs:
-        if defined(debug):
-            echo(route)
         routeCase.add(
             nnkOfBranch.newTree(newLit(route), body)
         )
@@ -81,5 +79,5 @@ template startServer*(serverPort: int = 8080, numOfThreads: int = 1): untyped {.
 
     when not defined(testing):
         let settings = initSettings(Port(serverPort), numThreads = numOfThreads)
-        echo("Mike is here to help")
+        echo("Mike is here to help on port " & $serverPort)
         run(handleRequest, settings = settings)
