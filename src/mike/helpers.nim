@@ -21,10 +21,14 @@ macro simple(body: untyped): untyped =
     )
 
 proc headerToString*(headers: HttpHeaders): string =
+    var index = 0
+    let finalIndex = len(headers) - 1
     for header in headers.pairs:
-        result &= header.key & ": " & header.value & "\c\L"
-    result.removePrefix("\c\L")
-
+        result &= header.key & ": " & header.value
+        # If not on the last header then add a new line
+        if index != finalIndex:
+            result &= "\c\L"
+        index += 1
 proc send*(request: MikeRequest, body: string = "", code: HttpCode = Http200, headers: HttpHeaders = newHttpHeaders()) =
     # Merge the headers
     for (key, value) in headers.pairs:
@@ -36,7 +40,8 @@ proc send*(request: MikeRequest, body: string = "", code: HttpCode = Http200, he
             request.response.code = code
             request.futResponse.complete(request.response)
     else:
-        echo($code)
+        echo(headers.headerToString)
+        echo(body)
         request.req.send(code, body, headerToString request.response.headers)
 
 
