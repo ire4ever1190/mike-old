@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.2.2"
+version       = "0.2.3"
 author        = "Jake Leahy"
 description   = "A very simple micro web framework"
 license       = "MIT"
@@ -10,7 +10,7 @@ srcDir        = "src"
 # Dependencies
 
 requires "nim >= 1.2.0"
-requires "httpx"
+requires "httpx == 0.1.0"
 
 task r, "runs the example":
     exec("nim c -d:debug -r example")
