@@ -20,11 +20,10 @@ type
         httpMethod*: HttpMethod
         queries*: Table[string, string]
         headers*: HttpHeaders
+        response*: MikeResponse 
         when not defined(testing):
-            response*: MikeResponse
             req*: Request
         else:
-            response*: MikeResponse
             futResponse*: Future[MikeResponse]
 
 proc parsePath*(path: string): tuple[path: string, query: Table[string, string]] =
