@@ -2,6 +2,7 @@ import mike
 import unittest
 import ../example
 import json
+import base64
 
 test "GET root":
     let response = getMock("/")
@@ -36,3 +37,19 @@ test "GET object response":
 test "GET 404":
     let response = getMock("/404")
     check response.code == Http404
+
+test "AUTH basic no username or password":
+    let response = getMock("/private")
+    check response.code == Http401
+
+test "AUTH basic wrong username and password":
+    let payload = encode("john:432")
+    let response = getMock("/private", newHttpHeaders({"Authorization": "Basic " & payload}))
+    check response.code == Http401
+
+test "AUTH basic correct username and password":
+    let payload = encode("user:123")
+    let response = getMock("/private", newHttpHeaders({"Authorization": "Basic " & payload}))
+    check response.code == Http200
+    check response.body == "hello me"
+    
