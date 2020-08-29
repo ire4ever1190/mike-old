@@ -61,9 +61,10 @@ template startServer*(serverPort: int = 8080, numOfThreads: int = 1): untyped {.
             request.response = newResponse()
         else:
             var request = req.toRequest()
-        
+
+        # before(request)
+            
         let httpMethod = request.httpMethod
-        
         if defined(debug):
             echo($httpMethod & " " & request.path & " " & $request.queries)
         try:
