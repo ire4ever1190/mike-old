@@ -8,6 +8,7 @@ import request
 import strutils
 import tables
 import mimetypes
+import asyncdispatch
 
 export request
 
@@ -106,3 +107,5 @@ proc form*(values: openarray[(string, string)]): string =
     for (key, value) in values:
         result &= key & "=" & encodeUrl(value) & "&"
     result.removeSuffix("&")
+
+converter toHeader*(headers: openarray[(string, string)]): HttpHeaders = newHttpHeaders(headers)
