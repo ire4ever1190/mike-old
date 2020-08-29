@@ -1,4 +1,5 @@
 import src/mike
+import src/mike/basicAuth
 import json
 import options
 import strformat
@@ -7,6 +8,8 @@ type
     Person* = object 
         name*: string
         age*:  int
+
+proc callLogging(req: Request) = echo(req.path)
 
 get "/":
     # Just a basic request
@@ -38,9 +41,17 @@ post "/jsontype":
     let person = json(Person)
     send(fmt"hello {person.name} who is aged {person.age}")
 
+
 get "/fred":
     # Send an object back as json
     let person = Person(name: "Fred", age: 54)
     send(person)
+
+basicAuth("user", "123"):
+    get "/private":
+        send "hello me"
+
+    get "/private2":
+        send "hello me again"
 
 startServer()
