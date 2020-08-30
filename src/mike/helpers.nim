@@ -9,7 +9,7 @@ import strutils
 import tables
 import mimetypes
 import asyncdispatch
-
+import httpx
 export request
 
 let mimeDB = newMimeTypes() 

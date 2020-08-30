@@ -6,6 +6,7 @@ import options
 import strutils
 import strformat
 import asyncdispatch
+import sugar
 
 include mike/routes
 include mike/helpers
@@ -13,25 +14,38 @@ when defined(testing):
     include mike/testing
     
 export json
+export sugar
 export httpx
 export tables
 export options
 export strutils
 export asyncdispatch
 
-
-macro createRoutes*(): untyped =
-    ## Gets all the routes from the global routes variable and puts them in a case tree
-    var routeCase = nnkCaseStmt.newTree(parseExpr("$httpMethod & request.path"))
-    
-    for (route, body) in routes.pairs:
-        routeCase.add(
-            nnkOfBranch.newTree(newLit(route), body)
+macro createProcs*(): untyped =
+    ## Used interally.
+    ## All the routes have a  unique procedure created for them which gets added to a table and called later
+    result = newStmtList()
+    var procTable = nnkTableConstr.newTree()
+    for (key, value) in compileTimeRoutes.pairs:
+        result &= newProc(name = ident(key.replace("/", "")), params = @[newEmptyNode(), newIdentDefs(ident("request"), ident("MikeRequest"))], body = value) # Create the proc
+        procTable.add( # Create the table entry
+            nnkExprColonExpr.newTree(
+                newLit(key.replace("/", "")), newIdentNode(key.replace("/", ""))
+            )
         )
-    routeCase.add(
-        nnkElse.newTree(parseExpr("send(Http404)"))
+    # Create the table of procs
+    result.add(
+        nnkLetSection.newTree(
+            nnkIdentDefs.newTree(
+                nnkPostFix.newTree(
+                    newIdentNode("*"),
+                    newIdentNode("routes")
+                ),
+                newEmptyNode(),
+                newCall("toTable", procTable)
+            )
+        )
     )
-    result = routeCase
 
 macro mockable*(prc: untyped): untyped =
     ## Changes the handleRequest proc to use MockRequest
@@ -47,13 +61,14 @@ macro mockable*(prc: untyped): untyped =
                     newEmptyNode()
                 )
             elif node.kind == nnkPragma:
-                node.del(0)
+                node.del(0) # Remove the async pragma since it is not needed when testing
             result &= node
     else:
         result = prc
 
 template startServer*(serverPort: int = 8080, numOfThreads: int = 1): untyped {.dirty.} =
-    
+    createProcs()
+                                    
     proc handleRequest*(req: Request): Future[void] {.mockable, async, gcsafe.} =
         when defined(testing):            
             request.futResponse = newFuture[MikeResponse]("Request handling")
@@ -61,14 +76,16 @@ template startServer*(serverPort: int = 8080, numOfThreads: int = 1): untyped {.
             request.response = newResponse()
         else:
             var request = req.toRequest()
-
-        # before(request)
             
         let httpMethod = request.httpMethod
         if defined(debug):
             echo($httpMethod & " " & request.path & " " & $request.queries)
         try:
-            createRoutes()
+            let key = replace($httpMethod & request.path, "/", "")
+            if routes.hasKey(key):
+                routes[replace($httpMethod & request.path, "/", "")](request)
+            else:
+                send(Http404)
         except:
             let
                 e = getCurrentException()
