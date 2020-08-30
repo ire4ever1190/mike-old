@@ -6,6 +6,13 @@ import httpcore
 import helpers
 import strformat
 
+#[
+    Authentication will work like how it does in ktor
+    you will be able to assign different authentication methods to certain routes
+    The code in this file will change heavily once I clean it up    
+]#
+
+
 proc basAuth*(request: MikeRequest, username, password: string): bool =
     ## Handles HTTP Basic Auth
     if request.headers.hasKey("Authorization"):
@@ -25,6 +32,7 @@ proc basAuth*(request: MikeRequest, username, password: string): bool =
             send(Http401)
     else:
         send(Http401)
+
 
 # TODO make this kinda more generic so it is easier to add new auth methods
 macro basicAuth*(username, password: string, body: untyped): untyped =
