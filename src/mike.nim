@@ -10,6 +10,7 @@ import sugar
 
 include mike/routes
 include mike/helpers
+include mike/middleware
 when defined(testing):
     include mike/testing
     
@@ -21,31 +22,19 @@ export options
 export strutils
 export asyncdispatch
 
-macro createProcs*(): untyped =
-    ## Used interally.
-    ## All the routes have a  unique procedure created for them which gets added to a table and called later
-    result = newStmtList()
-    var procTable = nnkTableConstr.newTree()
-    for (key, value) in compileTimeRoutes.pairs:
-        result &= newProc(name = ident(key.replace("/", "")), params = @[newEmptyNode(), newIdentDefs(ident("request"), ident("MikeRequest"))], body = value) # Create the proc
-        procTable.add( # Create the table entry
-            nnkExprColonExpr.newTree(
-                newLit(key.replace("/", "")), newIdentNode(key.replace("/", ""))
-            )
+macro createRoutes*(): untyped =
+    ## Gets all the routes from the global routes variable and puts them in a case tree
+    var routeCase = nnkCaseStmt.newTree(parseExpr("$httpMethod & request.path"))
+    
+    for (route, body) in routes.pairs:
+        routeCase.add(
+            nnkOfBranch.newTree(newLit(route), body)
         )
-    # Create the table of procs
-    result.add(
-        nnkLetSection.newTree(
-            nnkIdentDefs.newTree(
-                nnkPostFix.newTree(
-                    newIdentNode("*"),
-                    newIdentNode("routes")
-                ),
-                newEmptyNode(),
-                newCall("toTable", procTable)
-            )
-        )
+    routeCase.add(
+        nnkElse.newTree(parseExpr("send(Http404)"))
     )
+    result = routeCase
+
 
 macro mockable*(prc: untyped): untyped =
     ## Changes the handleRequest proc to use MockRequest
@@ -66,9 +55,19 @@ macro mockable*(prc: untyped): untyped =
     else:
         result = prc
 
-template startServer*(serverPort: int = 8080, numOfThreads: int = 1): untyped {.dirty.} =
-    createProcs()
-                                    
+macro callBeforewares*(middlewares: openarray[Handler]): untyped =
+    result = newStmtList()
+    for middleware in middlewares:
+        if middleware.strVal in beforeProcs:
+            result.add parseExpr(middleware.strVal & "(request)")
+
+macro callAfterwares*(middlewares: openarray[Handler]): untyped =
+    result = newStmtList()
+    for middleware in middlewares:
+        if middleware.strVal in afterProcs:
+            result.add parseExpr(middleware.strVal & "(request)")    
+
+template startServer*(serverPort: int = 8080, numOfThreads: int = 1, middlewares: openarray[Handler]): untyped {.dirty.} =                                    
     proc handleRequest*(req: Request): Future[void] {.mockable, async, gcsafe.} =
         when defined(testing):            
             request.futResponse = newFuture[MikeResponse]("Request handling")
@@ -76,16 +75,13 @@ template startServer*(serverPort: int = 8080, numOfThreads: int = 1): untyped {.
             request.response = newResponse()
         else:
             var request = req.toRequest()
-            
         let httpMethod = request.httpMethod
         if defined(debug):
             echo($httpMethod & " " & request.path & " " & $request.queries)
         try:
-            let key = replace($httpMethod & request.path, "/", "")
-            if routes.hasKey(key):
-                routes[replace($httpMethod & request.path, "/", "")](request)
-            else:
-                send(Http404)
+            callBeforewares(middlewares)
+            createRoutes()
+            callAfterwares(middlewares)
         except:
             let
                 e = getCurrentException()

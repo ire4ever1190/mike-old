@@ -9,8 +9,6 @@ type
         name*: string
         age*:  int
 
-proc callLogging(req: Request) = echo(req.path)
-
 get "/":
     # Just a basic request
     send("hello")
@@ -54,4 +52,5 @@ basicAuth("user", "123"):
     get "/private2":
         send "hello me again"
 
-startServer()
+
+startServer(middlewares = [callLogging]) # The callLogging middleware echos each request
