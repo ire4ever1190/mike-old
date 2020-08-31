@@ -24,3 +24,5 @@ test "Test root returns hello":
     let response = getMock("/")
     check response.body == "hello"
 ```
+
+made in [Nim](https://nim-lang.org/) with [httpx](https://github.com/xflywind/httpx) backend, inspired by [Kemal](https://kemalcr.com/)
