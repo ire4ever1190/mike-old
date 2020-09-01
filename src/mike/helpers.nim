@@ -30,19 +30,17 @@ proc headerToString*(headers: HttpHeaders): string =
         if index != finalIndex:
             result &= "\c\L"
         index += 1
+
 proc send*(request: MikeRequest, body: string = "", code: HttpCode = Http200, headers: HttpHeaders = newHttpHeaders()) =
     # Merge the headers
     for (key, value) in headers.pairs:
             request.response.headers[key] = value
-
     when defined(testing):
         if not request.futResponse.finished():
             request.response.body = body
             request.response.code = code
             request.futResponse.complete(request.response)
     else:
-        echo(headers.headerToString)
-        echo(body)
         request.req.send(code, body, headerToString request.response.headers)
 
 
@@ -62,6 +60,9 @@ template headers*(): untyped =
     ## Gets the headers from the request
     request.headers
     
+template addHeader*(key, value: string) =
+    request.response.headers[key] = value 
+
 template json*(): untyped = 
     ## Gets the json from the body
     parseJson(body())
