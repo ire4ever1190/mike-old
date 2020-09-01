@@ -67,7 +67,7 @@ macro callAfterwares*(middlewares: openarray[Handler]): untyped =
         if middleware.strVal in afterProcs:
             result.add parseExpr(middleware.strVal & "(request)")    
 
-template startServer*(serverPort: int = 8080, numOfThreads: int = 1, middlewares: openarray[Handler]): untyped {.dirty.} =                                    
+template startServer*(serverPort: int = 8080, numOfThreads: int = 1, middlewares: openarray[Handler] = []): untyped {.dirty.} =                                    
     proc handleRequest*(req: Request): Future[void] {.mockable, async, gcsafe.} =
         when defined(testing):            
             request.futResponse = newFuture[MikeResponse]("Request handling")
@@ -79,9 +79,9 @@ template startServer*(serverPort: int = 8080, numOfThreads: int = 1, middlewares
         if defined(debug):
             echo($httpMethod & " " & request.path & " " & $request.queries)
         try:
-            callBeforewares(middlewares)
-            createRoutes()
-            callAfterwares(middlewares)
+            callBeforewares(middlewares) # Call all the functions that should be called before the request
+            createRoutes() # Create a case statement which contains the code for the routes
+            callAfterwares(middlewares) # Call all the functions that should be called after the request
         except:
             let
                 e = getCurrentException()
