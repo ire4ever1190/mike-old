@@ -26,11 +26,12 @@ proc basAuth*(request: MikeRequest, username, password: string): bool =
             send(Http401)
         echo(authInfo, username, password)
         if authInfo[0] == username and authInfo[1] == password:
-            request.response.headers["WWW-Authenticate"] = "Basic realm=\"You are not here\""
             return true
         else:
+            request.response.headers["WWW-Authenticate"] = "Basic realm=\"You are not here\""
             send(Http401)
     else:
+        request.response.headers["WWW-Authenticate"] = "Basic realm=\"You are not here\""
         send(Http401)
 
 
