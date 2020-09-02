@@ -18,6 +18,11 @@ macro makeMethods*(): untyped =
         # For each HttpMethod a new macro is created
         # This macro creates a adds the body of the route which gets compiled into a proc later
         #
-        result.add parseStmt(&"macro {toLowerAscii($meth)}* (route: string, body: untyped) = routes[\"{meth}\" & route.strVal()] = body")
-    
+        let
+            methodString = $meth
+            macroIdent = newIdentNode(methodString.toLowerAscii())
+            
+        result.add quote do:
+            macro `macroIdent`* (route: string, body: untyped) =
+                routes[`methodString` & route.strVal()] = body
 makeMethods()
