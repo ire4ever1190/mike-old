@@ -55,23 +55,20 @@ macro mockable*(prc: untyped): untyped =
     else:
         result = prc
 
-macro callBeforewares*(middlewares: openarray[untyped]): untyped =
+## TODO not too sure if I should try and merge this into one or not
+macro callBeforewares*(middlewares: openarray[Handler]): untyped =
     result = newStmtList()
     for middleware in middlewares:
-        if middleware.strVal in beforeProcs:
-            let strVal = middleware.strVal
-            echo(strVal)
-            if strVal.contains("("): # if it already has parameters
-                result.add parseExpr("request." & strVal)
-            else:
-                result.add parseExpr(strVal & "(request)")
-            echo(toStrLit(result))
-            
-macro callAfterwares*(middlewares: openarray[untyped]): untyped =
+        if beforeProcs.hasKey(middleware.strVal):
+            let selectedMiddleware = beforeProcs[middleware.strVal]
+            result.add parseExpr(selectedMiddleware.name & "(request)")          
+
+macro callAfterwares*(middlewares: openarray[Handler]): untyped =
     result = newStmtList()
     for middleware in middlewares:
-        if middleware.strVal in afterProcs:
-            result.add parseExpr(middleware.strVal & "(request)")    
+        if afterProcs.hasKey(middleware.strVal):
+            let selectedMiddleware = afterProcs[middleware.strVal]
+            result.add parseExpr(selectedMiddleware.name & "(request)")    
 
 template startServer*(serverPort: int = 8080, numOfThreads: int = 1, middlewares: openarray[untyped] = []): untyped {.dirty.} =                                    
     proc handleRequest*(req: Request): Future[void] {.mockable, async, gcsafe.} =
