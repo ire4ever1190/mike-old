@@ -5,6 +5,15 @@ var # Hold the code for all the middleware calls
     beforeRequestCalls* {.compileTime.} = newStmtList()
     afterRequestCalls*  {.compileTime.} = newStmtList()
 
+template handleCalls(body: untyped): untyped =
+    # Insert request parameter before call
+    # TODO check if request is already passed
+    # TODO check if I could get compile time info 
+    for node in body:
+        if node.kind == nnkCall:
+            node.insert(1, newIdentNode("request"))
+            
+
 macro beforeRequest*(body: untyped): untyped =
     ## Put all the code that you want to be called before a request like so.
     ##```nim
@@ -13,13 +22,11 @@ macro beforeRequest*(body: untyped): untyped =
     ##```
     ## Any calls put in here must have MikeRequest as their first parameter (this is likely to change in the future).
     ## Also checkout afterRequest if you want to run code after the request.
-    for call in body:
-        call.insert(1, newIdentNode("request"))
+    handleCalls(body)    
     beforeRequestCalls = body
 
 macro afterRequest*(body: untyped): untyped =
-    for call in body:
-        call.insert(1, newIdentNode("request"))
+    handleCalls(body)
     afterRequestCalls = body
 
 macro callBeforewares*(): untyped =
