@@ -3,6 +3,8 @@ import src/mike/basicAuth
 import json
 import options
 import strformat
+import times
+import os
 
 type
     Person* = object 
@@ -56,5 +58,13 @@ basicAuth("user", "123"):
     get "/private2":
         send "hello me again"
 
+beforeRequest:
+    # All calls in here are called before a request
+    # Their first parameter must be MikeRequest but you do not pass it here
+    callLogging("Handling")
 
-startServer(middlewares = [callLogging]) # The callLogging middleware echos each request
+afterRequest:
+    # All calls in here are called after a request
+    callLogging("Handled")
+
+startServer() # The callLogging middleware echos each request

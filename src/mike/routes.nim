@@ -24,9 +24,9 @@ macro makeMethods*(): untyped =
             
         result.add quote do:
             macro `macroIdent`* (route: string, body: untyped) =
-                if route.contains("{"):
-                    if route.count("{") != route.count("}"):
-                        {.fatal: "Mismatched brackets with route " & route}
+                # if route.strVal.contains("{"):
+                    # if route.strVal.count("{") != route.strVal.count("}"):
+                        # {.fatal: "Mismatched brackets with route " & route.strVal.}
                 routes[`methodString` & route.strVal()] = body
 
 makeMethods()

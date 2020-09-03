@@ -55,22 +55,7 @@ macro mockable*(prc: untyped): untyped =
     else:
         result = prc
 
-## TODO not too sure if I should try and merge this into one or not
-macro callBeforewares*(middlewares: openarray[Handler]): untyped =
-    result = newStmtList()
-    for middleware in middlewares:
-        if beforeProcs.hasKey(middleware.strVal):
-            let selectedMiddleware = beforeProcs[middleware.strVal]
-            result.add parseExpr(selectedMiddleware.name & "(request)")          
-
-macro callAfterwares*(middlewares: openarray[Handler]): untyped =
-    result = newStmtList()
-    for middleware in middlewares:
-        if afterProcs.hasKey(middleware.strVal):
-            let selectedMiddleware = afterProcs[middleware.strVal]
-            result.add parseExpr(selectedMiddleware.name & "(request)")    
-
-template startServer*(serverPort: int = 8080, numOfThreads: int = 1, middlewares: openarray[untyped] = []): untyped {.dirty.} =                                    
+template startServer*(serverPort: int = 8080, numOfThreads: int = 1): untyped {.dirty.} =                                    
     proc handleRequest*(req: Request): Future[void] {.mockable, async, gcsafe.} =
         when defined(testing):            
             request.futResponse = newFuture[MikeResponse]("Request handling")
@@ -82,9 +67,9 @@ template startServer*(serverPort: int = 8080, numOfThreads: int = 1, middlewares
         if defined(debug):
             echo($httpMethod & " " & request.path & " " & $request.queries)
         try:
-            callBeforewares(middlewares) # Call all the functions that should be called before the request
+            callBeforewares()
             createRoutes() # Create a case statement which contains the code for the routes
-            callAfterwares(middlewares) # Call all the functions that should be called after the request
+            callAfterwares()
         except:
             let
                 e = getCurrentException()
