@@ -3,8 +3,6 @@ import src/mike/basicAuth
 import json
 import options
 import strformat
-import times
-import os
 
 type
     Person* = object 
