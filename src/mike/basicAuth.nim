@@ -15,6 +15,7 @@ import strformat
 
 proc basAuth*(request: MikeRequest, username, password: string): bool =
     ## Handles HTTP Basic Auth
+    echo(username, password)
     if request.headers.hasKey("Authorization"):
         var authInfo: seq[string]
         try:
@@ -24,7 +25,6 @@ proc basAuth*(request: MikeRequest, username, password: string): bool =
                                 .split(":")
         except:
             send(Http401)
-        echo(authInfo, username, password)
         if authInfo[0] == username and authInfo[1] == password:
             return true
         else:
@@ -37,6 +37,7 @@ proc basAuth*(request: MikeRequest, username, password: string): bool =
 
 # TODO make this kinda more generic so it is easier to add new auth methods
 macro basicAuth*(username, password: string, body: untyped): untyped =
+    echo(username, password)
     for route in body:
         for node in route:
             if node.kind == nnkStmtList:

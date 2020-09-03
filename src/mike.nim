@@ -55,19 +55,25 @@ macro mockable*(prc: untyped): untyped =
     else:
         result = prc
 
-macro callBeforewares*(middlewares: openarray[Handler]): untyped =
+macro callBeforewares*(middlewares: openarray[untyped]): untyped =
     result = newStmtList()
     for middleware in middlewares:
         if middleware.strVal in beforeProcs:
-            result.add parseExpr(middleware.strVal & "(request)")
-
-macro callAfterwares*(middlewares: openarray[Handler]): untyped =
+            let strVal = middleware.strVal
+            echo(strVal)
+            if strVal.contains("("): # if it already has parameters
+                result.add parseExpr("request." & strVal)
+            else:
+                result.add parseExpr(strVal & "(request)")
+            echo(toStrLit(result))
+            
+macro callAfterwares*(middlewares: openarray[untyped]): untyped =
     result = newStmtList()
     for middleware in middlewares:
         if middleware.strVal in afterProcs:
             result.add parseExpr(middleware.strVal & "(request)")    
 
-template startServer*(serverPort: int = 8080, numOfThreads: int = 1, middlewares: openarray[Handler] = []): untyped {.dirty.} =                                    
+template startServer*(serverPort: int = 8080, numOfThreads: int = 1, middlewares: openarray[untyped] = []): untyped {.dirty.} =                                    
     proc handleRequest*(req: Request): Future[void] {.mockable, async, gcsafe.} =
         when defined(testing):            
             request.futResponse = newFuture[MikeResponse]("Request handling")

@@ -45,6 +45,10 @@ get "/fred":
     let person = Person(name: "Fred", age: 54)
     send(person)
 
+get "/number/{selectedNumber}":
+    send("j")
+    # send(selectedNumber)
+
 basicAuth("user", "123"):
     get "/private":
         send "hello me"
