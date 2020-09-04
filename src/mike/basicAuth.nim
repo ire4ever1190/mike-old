@@ -13,37 +13,18 @@ import strformat
 ]#
 
 
-proc basAuth*(request: MikeRequest, username, password: string): bool =
+proc basicAuth*(request: MikeRequest, username, password: string, forbiddenMessage: string = "You are forbidden") =
     ## Handles HTTP Basic Auth
-    echo(username, password)
-    if request.headers.hasKey("Authorization"):
-        var authInfo: seq[string]
-        try:
-            authInfo = request.headers["Authorization"]
-                                .replace("Basic ", "")
-                                .decode()
-                                .split(":")
-        except:
-            send(Http401)
-        if authInfo[0] == username and authInfo[1] == password:
-            return true
-        else:
-            request.response.headers["WWW-Authenticate"] = "Basic realm=\"You are not here\""
-            send(Http401)
-    else:
-        request.response.headers["WWW-Authenticate"] = "Basic realm=\"You are not here\""
-        send(Http401)
-
-
-# TODO make this kinda more generic so it is easier to add new auth methods
-macro basicAuth*(username, password: string, body: untyped): untyped =
-    echo(username, password)
-    for route in body:
-        for node in route:
-            if node.kind == nnkStmtList:
-                # Code put in here gets injected into the start of the route call
-                node.insert 0, nnkIfStmt.newTree(
-                    nnkElifBranch.newTree(parseExpr(&"request.basAuth(\"{username}\", \"{password}\")"), parseExpr("""echo("hello")"""))
-                )
-    return body
-
+    block:
+        if request.headers.hasKey("Authorization"):
+            try:
+                let authInfo = request.headers["Authorization"]
+                                    .replace("Basic ", "")
+                                    .decode()
+                                    .split(":")
+                if authInfo[0] == username and authInfo[1] == password:
+                    return
+            except:
+                break 
+    addHeader("WWW-Authenticate", &"Basic realm=\"{forbiddenMessage}\"")
+    send(Http401)

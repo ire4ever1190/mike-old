@@ -51,13 +51,15 @@ get "/number/{selectedNumber}":
     send("j")
     # send(selectedNumber)
 
-basicAuth("user", "123"):
+insertBefore:
+    basicAuth(request, "user", "123")
     get "/private":
         send "hello me"
 
     get "/private2":
         send "hello me again"
 
+callLogging(MikeRequest(), "handling")
 beforeRequest:
     # All calls in here are called before a request
     # Their first parameter must be MikeRequest but you do not pass it here

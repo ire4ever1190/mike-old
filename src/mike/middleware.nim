@@ -1,6 +1,8 @@
 import request
 import macros
 
+# TODO See if there is a way to easily allow both implicit and explicit
+
 var # Hold the code for all the middleware calls
     beforeRequestCalls* {.compileTime.} = newStmtList()
     afterRequestCalls*  {.compileTime.} = newStmtList()
@@ -11,6 +13,7 @@ template handleCalls(body: untyped): untyped =
     # TODO check if I could get compile time info 
     for node in body:
         if node.kind == nnkCall:
+            let name = node[0].strVal
             node.insert(1, newIdentNode("request"))
             
 
@@ -34,8 +37,29 @@ macro callBeforewares*(): untyped =
     return beforeRequestCalls
 
 macro callAfterwares*(): untyped =
-    ## Retursn the code which calls all the after middlewares
+    ## Returns the code which calls all the after middlewares
     return afterRequestCalls
+
+macro insertBefore*(body: untyped): untyped =
+    ## Like beforeRequest and afterRequest but used for adding middleware to certain routes.
+    ## Helpful for adding things like authentication middleware to only certain routes
+    var calls = newStmtList()
+    for node in body:
+        # echo(node.kind)
+        case node.kind:
+        of nnkCall:
+            calls.add(node)
+            # echo(toStrLit(calls))
+        of nnkCommand:
+            for thing in node:
+                if thing.kind == nnkStmtList:
+                    thing.insert(0, calls)
+                    # echo toStrLit(thing)
+        else: 
+            continue
+    body.del(n = calls.len())
+    return body
+
 
 proc callLogging*(request: MikeRequest, prefix: string = "") =
     ## An example middleware
