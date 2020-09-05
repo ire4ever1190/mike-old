@@ -4,6 +4,7 @@ send	mike.html#send.t,string,HttpCode,HttpHeaders	mike: send(body: string; code:
 send	mike.html#send.t,HttpCode,HttpHeaders	mike: send(code: HttpCode; headers: HttpHeaders = newHttpHeaders()): untyped	
 body	mike.html#body.t	mike: body(): untyped	
 headers	mike.html#headers.t	mike: headers(): untyped	
+addHeader	mike.html#addHeader.t,string,string	mike: addHeader(key, value: string)	
 json	mike.html#json.t	mike: json(): untyped	
 json	mike.html#json.t,typedesc	mike: json(obj: typedesc): untyped	
 getOrDefault	mike.html#getOrDefault,Option[T]	mike: getOrDefault[T](value: Option[T]): T	
@@ -13,5 +14,14 @@ send	mike.html#send,MikeRequest,JsonNode,HttpCode	mike: send(request: MikeReques
 send	mike.html#send.t,JsonNode,HttpCode	mike: send(reqBody: JsonNode; hCode: HttpCode = Http200): untyped	
 send	mike.html#send.t,typed,HttpCode	mike: send(reqBody: typed; hCode: HttpCode = Http200): untyped	
 form	mike.html#form,openArray[]	mike: form(values: openArray[(string, string)]): string	
+toHeader	mike.html#toHeader.c,openArray[]	mike: toHeader(headers: openArray[(string, string)]): HttpHeaders	
+beforeRequestCalls	mike.html#beforeRequestCalls	mike: beforeRequestCalls	
+afterRequestCalls	mike.html#afterRequestCalls	mike: afterRequestCalls	
+beforeRequest	mike.html#beforeRequest.m,untyped	mike: beforeRequest(body: untyped): untyped	
+afterRequest	mike.html#afterRequest.m,untyped	mike: afterRequest(body: untyped): untyped	
+callBeforewares	mike.html#callBeforewares.m	mike: callBeforewares(): untyped	
+callAfterwares	mike.html#callAfterwares.m	mike: callAfterwares(): untyped	
+insertBefore	mike.html#insertBefore.m,untyped	mike: insertBefore(body: untyped): untyped	
+callLogging	mike.html#callLogging,MikeRequest,string	mike: callLogging(request: MikeRequest; prefix: string = &quot;&quot;)	
 mockable	mike.html#mockable.m,untyped	mike: mockable(prc: untyped): untyped	
 startServer	mike.html#startServer.t,int,int	mike: startServer(serverPort: int = 8080; numOfThreads: int = 1): untyped	

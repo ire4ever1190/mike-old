@@ -1,0 +1,5 @@
+MikeResponse	mike/request.html#MikeResponse	request: MikeResponse	
+MikeRequest	mike/request.html#MikeRequest	request: MikeRequest	
+newRequest	mike/request.html#newRequest,HttpMethod,string,string,HttpHeaders	request: newRequest(httpMethod: HttpMethod; path: string; body: string = &quot;&quot;;\n           headers: HttpHeaders = newHttpHeaders()): MikeRequest	
+newResponse	mike/request.html#newResponse	request: newResponse(): MikeResponse	
+toRequest	mike/request.html#toRequest,Request	request: toRequest(req: Request): MikeRequest	
