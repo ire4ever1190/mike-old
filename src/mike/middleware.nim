@@ -9,6 +9,7 @@ var # Hold the code for all the middleware calls
 
 template handleCalls(body: untyped): untyped =
     # Insert request parameter before call
+    # Ununsed
     # TODO check if request is already passed
     # TODO check if I could get compile time info 
     for node in body:
@@ -25,11 +26,11 @@ macro beforeRequest*(body: untyped): untyped =
     ##```
     ## Any calls put in here must have MikeRequest as their first parameter (this is likely to change in the future).
     ## Also checkout afterRequest if you want to run code after the request.
-    handleCalls(body)    
+    # handleCalls(body)
     beforeRequestCalls = body
 
 macro afterRequest*(body: untyped): untyped =
-    handleCalls(body)
+    # handleCalls(body)
     afterRequestCalls = body
 
 macro callBeforewares*(): untyped =
@@ -49,7 +50,6 @@ macro insertBefore*(body: untyped): untyped =
         case node.kind:
         of nnkCall:
             calls.add(node)
-            # echo(toStrLit(calls))
         of nnkCommand:
             for thing in node:
                 if thing.kind == nnkStmtList:

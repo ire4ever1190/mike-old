@@ -17,7 +17,7 @@ task r, "runs the example":
 
 task genDoc, "Generates the doc":
     rmDir("docs")
-    exec("nimble doc --git.url:https://github.com/ire4ever1190/mike --git.commit:master --index:on --outdir:docs -d:docs --project src/mike.nim; exit 0")
+    exec("nimble doc2 --git.url:https://github.com/ire4ever1190/mike --git.commit:master --index:on --outdir:docs -d:docs --project src/mike.nim; exit 0")
     exec("nim buildIndex -o:docs/theindex.html docs")
     exec("nim rst2html -o:docs/index.html readme.rst")
     # Adds a fix for dark theme on the index

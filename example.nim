@@ -61,10 +61,10 @@ callLogging(MikeRequest(), "handling")
 beforeRequest:
     # All calls in here are called before a request
     # Their first parameter must be MikeRequest but you do not pass it here
-    callLogging("Handling")
+    request.callLogging("Handling")
 
 afterRequest:
     # All calls in here are called after a request
-    callLogging("Handled")
+    request.callLogging("Handled")
 
 startServer() # The callLogging middleware echos each request
