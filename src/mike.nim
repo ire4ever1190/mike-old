@@ -1,19 +1,21 @@
-import uri
 import httpx
 import macros
 import tables
 import options
 import strutils
-import strformat
 import asyncdispatch
 import sugar
-
-include mike/routes
-include mike/helpers
-include mike/middleware
+import mike / [
+    routes,
+    helpers,
+    middleware
+]
 when defined(testing):
     include mike/testing
     
+export helpers
+export routes
+export middleware
 export json
 export sugar
 export httpx
