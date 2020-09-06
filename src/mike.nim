@@ -8,11 +8,7 @@ import strformat
 import asyncdispatch
 import sugar
 
-when defined(docs):
-    import mike/mroutes
-else:
-    include mike/mroutes
-
+include mike/routes
 include mike/helpers
 include mike/middleware
 when defined(testing):
@@ -25,25 +21,6 @@ export tables
 export options
 export strutils
 export asyncdispatch
-
-when defined(docs):
-    var 
-        routes     {.compileTime.} = initTable[string, NimNode]()
-        slowRoutes {.compileTime.} = initTable[string, NimNode]() # Optional value routes, regex routes etc
-
-macro createRoutes*(): untyped =
-    ## Gets all the routes from the global routes variable and puts them in a case tree
-    var routeCase = nnkCaseStmt.newTree(parseExpr("$httpMethod & request.path"))
-    
-    for (route, body) in routes.pairs:
-        routeCase.add(
-            nnkOfBranch.newTree(newLit(route), body)
-        )
-    routeCase.add(
-        nnkElse.newTree(parseExpr("send(Http404)"))
-    )
-    result = routeCase
-
 
 macro mockable*(prc: untyped): untyped =
     ## Changes the handleRequest proc to use MockRequest
