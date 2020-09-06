@@ -7,31 +7,78 @@ var # Hold the code for all the middleware calls
     beforeRequestCalls* {.compileTime.} = newStmtList()
     afterRequestCalls*  {.compileTime.} = newStmtList()
 
-template handleCalls(body: untyped): untyped =
-    # Insert request parameter before call
-    # Ununsed
-    # TODO check if request is already passed
-    # TODO check if I could get compile time info 
+proc generateHash(routes: NimNode): uint =
+    ## Generates a hash for a list of routes using sdbm.
+    ## This is used instead of MD5 because the builtin MD5 does not work at compile time
+    for route in routes:
+        for chr in route[1].strVal:
+            result = uint(ord(chr)) + (result shl 6) + (result shl 16) - result
+    
+template handleCalls(body: NimNode, calls: var NimNode, isBefore: bool): untyped =
+    var 
+        tempCalls = newStmtList() # Hold all the found calls
+        procs = newStmtList() # Hold all the routes
+        
     for node in body:
-        if node.kind == nnkCall:
-            let name = node[0].strVal
-            node.insert(1, newIdentNode("request"))
-            
+        case node.kind:
+        of nnkCommand:
+            procs.add(node)
+        else:
+            tempCalls &= node
+
+    if procs.len() == 0: # If there are no routes then add to global middleware
+        calls = tempCalls
+    else:
+        #[
+          If this is middleware for certain routes then create a proc that calls all the code for the middleware
+          The proc will be given a unique name by computing a hash consistening of the route paths  
+        ]#
+        let 
+            procName = $generateHash(procs)
+            call = newCall(
+                procName,
+                ident("request")
+            )
+        for procedure in procs:
+            if isBefore:
+                procedure[2].insert(0, call)
+            else:
+                procedure[2].add(call)
+
+        procs &= newProc( # Create the new proc and add it to the procs list
+            newIdentNode(procName),
+            params = [
+                newEmptyNode(),
+                newIdentDefs(
+                    ident("request"),
+                    ident("MikeRequest")
+                )],
+            body = tempCalls
+        )
+        return procs
+        
 
 macro beforeRequest*(body: untyped): untyped =
     ## Put all the code that you want to be called before a request like so.
-    ##```nim
+    ##
+    ##.. code-block:: nim
     ##  beforeRequest:
-    ##      callLogging()
-    ##```
+    ##      echo("hello") # this will be called before ever request
+    ##
+    ##  # Can also be done for certain routes
+    ##  beforeRequest:
+    ##      echo("certain route")
+    ##      get "/":
+    ##          send("hello")
+    ##
     ## Any calls put in here must have MikeRequest as their first parameter (this is likely to change in the future).
     ## Also checkout afterRequest if you want to run code after the request.
     # handleCalls(body)
-    beforeRequestCalls = body
+    handleCalls(body, beforeRequestCalls, true)
 
 macro afterRequest*(body: untyped): untyped =
     # handleCalls(body)
-    afterRequestCalls = body
+    handleCalls(body, afterRequestCalls, false)
 
 macro callBeforewares*(): untyped =
     ## Returns the code which calls all the before middlewares
@@ -41,7 +88,7 @@ macro callAfterwares*(): untyped =
     ## Returns the code which calls all the after middlewares
     return afterRequestCalls
 
-macro insertBefore*(body: untyped): untyped =
+macro insertBefore*(body: untyped): untyped {.deprecated: "Use beforeRequest instead".}=
     ## Like beforeRequest and afterRequest but used for adding middleware to certain routes.
     ## Helpful for adding things like authentication middleware to only certain routes
     var calls = newStmtList()
