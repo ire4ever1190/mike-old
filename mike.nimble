@@ -17,19 +17,9 @@ task r, "runs the example":
 
 task genDoc, "Generates the doc":
     rmDir("docs")
-    exec("nimble doc2 --git.url:https://github.com/ire4ever1190/mike --git.commit:master --index:on --outdir:docs -d:docs --project src/mike.nim; exit 0")
+    exec("nimble doc --git.url:https://github.com/ire4ever1190/mike --git.commit:master --index:on --outdir:docs -d:docs --project src/mike.nim; exit 0")
     exec("nim buildIndex -o:docs/theindex.html docs")
-    writeFile("docs/index.html", """
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta http-equiv="Refresh" content="0; url=theindex.html" />
-      </head>
-      <body>
-        <p>Click <a href="theindex.html">this link</a> if this does not redirect you.</p>
-      </body>
-    </html>
-    """)
+    exec("nim rst2html -o:docs/index.html readme.rst")
 
 task workspace, "Internal use, loads up all the files":
     exec("micro src/mike.nim src/mike/*.nim")
