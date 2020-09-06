@@ -20,6 +20,17 @@ task genDoc, "Generates the doc":
     exec("nimble doc --git.url:https://github.com/ire4ever1190/mike --git.commit:master --index:on --outdir:docs -d:docs --project src/mike.nim; exit 0")
     exec("nim buildIndex -o:docs/theindex.html docs")
     exec("nim rst2html -o:docs/index.html readme.rst")
+    # Adds a fix for dark theme on the index
+    var index = readFile("docs/index.html")
+    index &= """
+        <script>
+        const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
+        if (currentTheme) {
+            document.documentElement.setAttribute('data-theme', currentTheme);
+        }
+        </script>
+        """
+    writeFile("docs/index.html", index)
 
 task workspace, "Internal use, loads up all the files":
     exec("micro src/mike.nim src/mike/*.nim")
