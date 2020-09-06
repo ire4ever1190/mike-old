@@ -2,7 +2,7 @@
 Mike, The Mikro web framework
 ******************************
 
-.. Image:: https://github.com/ire4ever1190/mike/workflows/Tests/badge.svg
+.. image:: https://github.com/ire4ever1190/mike/workflows/Tests/badge.svg
 
 very simple to use web framework for easy prototyping and rapid development
 
@@ -15,7 +15,7 @@ very simple to use web framework for easy prototyping and rapid development
     
     startServer()
 
-`index <https://ire4ever1190.github.io/mike/theindex.html>`__
+`index </theindex.html>`__
 
 Installation
 ============
