@@ -47,21 +47,12 @@ function main() {
 
   toggleSwitch.addEventListener('change', switchTheme, false);
 
+  const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
+  if (currentTheme) {
+    document.documentElement.setAttribute('data-theme', currentTheme);
 
-  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    document.documentElement.setAttribute('data-theme', "dark");
-    toggleSwitch.checked = true;
-  } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-    document.documentElement.setAttribute('data-theme', "light");
-    toggleSwitch.checked = false;
-  } else {
-    const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
-    if (currentTheme) {
-      document.documentElement.setAttribute('data-theme', currentTheme);
-
-      if (currentTheme === 'dark') {
-        toggleSwitch.checked = true;
-      }
+    if (currentTheme === 'dark') {
+      toggleSwitch.checked = true;
     }
   }
 }
@@ -72,76 +63,68 @@ function main() {
 <div class="document" id="documentId">
   <div class="container">
     <h1 class="title">Index</h1>
-    Modules: <a href="mike.html">mike</a>, <a href="mike/mroutes.html">mike/mroutes</a>, <a href="mike/request.html">mike/request</a>.<br/><p /><h2>API symbols</h2>
+    Modules: <a href="mike.html">mike</a>, <a href="mike/helpers.html">mike/helpers</a>, <a href="mike/middleware.html">mike/middleware</a>, <a href="mike/request.html">mike/request</a>, <a href="mike/routes.html">mike/routes</a>.<br/><p /><h2>API symbols</h2>
 <dl><dt><a name="addHeader" href="#addHeader"><span>addHeader:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="mike: addHeader(key, value: string)" href="mike.html#addHeader.t%2Cstring%2Cstring">mike: addHeader(key, value: string)</a></li>
+          data-doc-search-tag="helpers: addHeader(key, value: string)" href="mike/helpers.html#addHeader.t%2Cstring%2Cstring">helpers: addHeader(key, value: string)</a></li>
           </ul></dd>
 <dt><a name="afterRequest" href="#afterRequest"><span>afterRequest:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="mike: afterRequest(body: untyped): untyped" href="mike.html#afterRequest.m%2Cuntyped">mike: afterRequest(body: untyped): untyped</a></li>
+          data-doc-search-tag="middleware: afterRequest(body: untyped): untyped" href="mike/middleware.html#afterRequest.m%2Cuntyped">middleware: afterRequest(body: untyped): untyped</a></li>
           </ul></dd>
 <dt><a name="afterRequestCalls" href="#afterRequestCalls"><span>afterRequestCalls:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="mike: afterRequestCalls" href="mike.html#afterRequestCalls">mike: afterRequestCalls</a></li>
+          data-doc-search-tag="middleware: afterRequestCalls" href="mike/middleware.html#afterRequestCalls">middleware: afterRequestCalls</a></li>
           </ul></dd>
 <dt><a name="beforeRequest" href="#beforeRequest"><span>beforeRequest:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="mike: beforeRequest(body: untyped): untyped" href="mike.html#beforeRequest.m%2Cuntyped">mike: beforeRequest(body: untyped): untyped</a></li>
+          data-doc-search-tag="middleware: beforeRequest(body: untyped): untyped" href="mike/middleware.html#beforeRequest.m%2Cuntyped">middleware: beforeRequest(body: untyped): untyped</a></li>
           </ul></dd>
 <dt><a name="beforeRequestCalls" href="#beforeRequestCalls"><span>beforeRequestCalls:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="mike: beforeRequestCalls" href="mike.html#beforeRequestCalls">mike: beforeRequestCalls</a></li>
+          data-doc-search-tag="middleware: beforeRequestCalls" href="mike/middleware.html#beforeRequestCalls">middleware: beforeRequestCalls</a></li>
           </ul></dd>
 <dt><a name="body" href="#body"><span>body:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="mike: body(): untyped" href="mike.html#body.t">mike: body(): untyped</a></li>
+          data-doc-search-tag="helpers: body(): untyped" href="mike/helpers.html#body.t">helpers: body(): untyped</a></li>
           </ul></dd>
 <dt><a name="callAfterwares" href="#callAfterwares"><span>callAfterwares:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="mike: callAfterwares(): untyped" href="mike.html#callAfterwares.m">mike: callAfterwares(): untyped</a></li>
+          data-doc-search-tag="middleware: callAfterwares(): untyped" href="mike/middleware.html#callAfterwares.m">middleware: callAfterwares(): untyped</a></li>
           </ul></dd>
 <dt><a name="callBeforewares" href="#callBeforewares"><span>callBeforewares:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="mike: callBeforewares(): untyped" href="mike.html#callBeforewares.m">mike: callBeforewares(): untyped</a></li>
+          data-doc-search-tag="middleware: callBeforewares(): untyped" href="mike/middleware.html#callBeforewares.m">middleware: callBeforewares(): untyped</a></li>
           </ul></dd>
 <dt><a name="callLogging" href="#callLogging"><span>callLogging:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="mike: callLogging(request: MikeRequest; prefix: string = &quot;&quot;)" href="mike.html#callLogging%2CMikeRequest%2Cstring">mike: callLogging(request: MikeRequest; prefix: string = &quot;&quot;)</a></li>
+          data-doc-search-tag="middleware: callLogging(request: MikeRequest; prefix: string = &quot;&quot;)" href="mike/middleware.html#callLogging%2CMikeRequest%2Cstring">middleware: callLogging(request: MikeRequest; prefix: string = &quot;&quot;)</a></li>
           </ul></dd>
 <dt><a name="form" href="#form"><span>form:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="mike: form(request: MikeRequest): Table[string, string]" href="mike.html#form%2CMikeRequest">mike: form(request: MikeRequest): Table[string, string]</a></li>
+          data-doc-search-tag="helpers: form(request: MikeRequest): Table[string, string]" href="mike/helpers.html#form%2CMikeRequest">helpers: form(request: MikeRequest): Table[string, string]</a></li>
           <li><a class="reference external"
-          data-doc-search-tag="mike: form(values: openArray[(string, string)]): string" href="mike.html#form%2CopenArray%5B%5D">mike: form(values: openArray[(string, string)]): string</a></li>
-          </ul></dd>
-<dt><a name="getOrDefault" href="#getOrDefault"><span>getOrDefault:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="mike: getOrDefault[T](value: Option[T]): T" href="mike.html#getOrDefault%2COption%5BT%5D">mike: getOrDefault[T](value: Option[T]): T</a></li>
+          data-doc-search-tag="helpers: form(values: openArray[(string, string)]): string" href="mike/helpers.html#form%2CopenArray%5B%5D">helpers: form(values: openArray[(string, string)]): string</a></li>
           </ul></dd>
 <dt><a name="headers" href="#headers"><span>headers:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="mike: headers(headers: openArray[(string, string)]): HttpHeaders" href="mike.html#headers%2CopenArray%5B%5D">mike: headers(headers: openArray[(string, string)]): HttpHeaders</a></li>
+          data-doc-search-tag="helpers: headers(headers: openArray[(string, string)]): HttpHeaders" href="mike/helpers.html#headers%2CopenArray%5B%5D">helpers: headers(headers: openArray[(string, string)]): HttpHeaders</a></li>
           <li><a class="reference external"
-          data-doc-search-tag="mike: headers(): untyped" href="mike.html#headers.t">mike: headers(): untyped</a></li>
-          </ul></dd>
-<dt><a name="headerToString" href="#headerToString"><span>headerToString:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="mike: headerToString(headers: HttpHeaders): string" href="mike.html#headerToString%2CHttpHeaders">mike: headerToString(headers: HttpHeaders): string</a></li>
+          data-doc-search-tag="helpers: headers(): untyped" href="mike/helpers.html#headers.t">helpers: headers(): untyped</a></li>
           </ul></dd>
 <dt><a name="insertBefore" href="#insertBefore"><span>insertBefore:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="mike: insertBefore(body: untyped): untyped" href="mike.html#insertBefore.m%2Cuntyped">mike: insertBefore(body: untyped): untyped</a></li>
+          data-doc-search-tag="middleware: insertBefore(body: untyped): untyped" href="mike/middleware.html#insertBefore.m%2Cuntyped">middleware: insertBefore(body: untyped): untyped</a></li>
           </ul></dd>
 <dt><a name="json" href="#json"><span>json:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="mike: json(): untyped" href="mike.html#json.t">mike: json(): untyped</a></li>
+          data-doc-search-tag="helpers: json(): untyped" href="mike/helpers.html#json.t">helpers: json(): untyped</a></li>
           <li><a class="reference external"
-          data-doc-search-tag="mike: json(obj: typedesc): untyped" href="mike.html#json.t%2Ctypedesc">mike: json(obj: typedesc): untyped</a></li>
+          data-doc-search-tag="helpers: json(obj: typedesc): untyped" href="mike/helpers.html#json.t%2Ctypedesc">helpers: json(obj: typedesc): untyped</a></li>
           </ul></dd>
 <dt><a name="makeMethods" href="#makeMethods"><span>makeMethods:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="mroutes: makeMethods(): untyped" href="mike/mroutes.html#makeMethods.m">mroutes: makeMethods(): untyped</a></li>
+          data-doc-search-tag="routes: makeMethods(): untyped" href="mike/routes.html#makeMethods.m">routes: makeMethods(): untyped</a></li>
           </ul></dd>
 <dt><a name="MikeRequest" href="#MikeRequest"><span>MikeRequest:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -167,19 +150,19 @@ function main() {
           </ul></dd>
 <dt><a name="send" href="#send"><span>send:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="mike: send(request: MikeRequest; reqBody: JsonNode; hCode: HttpCode = Http200)" href="mike.html#send%2CMikeRequest%2CJsonNode%2CHttpCode">mike: send(request: MikeRequest; reqBody: JsonNode; hCode: HttpCode = Http200)</a></li>
+          data-doc-search-tag="helpers: send(request: MikeRequest; reqBody: JsonNode; hCode: HttpCode = Http200)" href="mike/helpers.html#send%2CMikeRequest%2CJsonNode%2CHttpCode">helpers: send(request: MikeRequest; reqBody: JsonNode; hCode: HttpCode = Http200)</a></li>
           <li><a class="reference external"
-          data-doc-search-tag="mike: send(request: MikeRequest; body: string = &quot;&quot;; code: HttpCode = Http200;
-     headers: HttpHeaders = newHttpHeaders())" href="mike.html#send%2CMikeRequest%2Cstring%2CHttpCode%2CHttpHeaders">mike: send(request: MikeRequest; body: string = &quot;&quot;; code: HttpCode = Http200;
+          data-doc-search-tag="helpers: send(request: MikeRequest; body: string = &quot;&quot;; code: HttpCode = Http200;
+     headers: HttpHeaders = newHttpHeaders())" href="mike/helpers.html#send%2CMikeRequest%2Cstring%2CHttpCode%2CHttpHeaders">helpers: send(request: MikeRequest; body: string = &quot;&quot;; code: HttpCode = Http200;
      headers: HttpHeaders = newHttpHeaders())</a></li>
           <li><a class="reference external"
-          data-doc-search-tag="mike: send(code: HttpCode; headers: HttpHeaders = newHttpHeaders()): untyped" href="mike.html#send.t%2CHttpCode%2CHttpHeaders">mike: send(code: HttpCode; headers: HttpHeaders = newHttpHeaders()): untyped</a></li>
+          data-doc-search-tag="helpers: send(code: HttpCode; headers: HttpHeaders = newHttpHeaders()): untyped" href="mike/helpers.html#send.t%2CHttpCode%2CHttpHeaders">helpers: send(code: HttpCode; headers: HttpHeaders = newHttpHeaders()): untyped</a></li>
           <li><a class="reference external"
-          data-doc-search-tag="mike: send(reqBody: JsonNode; hCode: HttpCode = Http200): untyped" href="mike.html#send.t%2CJsonNode%2CHttpCode">mike: send(reqBody: JsonNode; hCode: HttpCode = Http200): untyped</a></li>
+          data-doc-search-tag="helpers: send(reqBody: JsonNode; hCode: HttpCode = Http200): untyped" href="mike/helpers.html#send.t%2CJsonNode%2CHttpCode">helpers: send(reqBody: JsonNode; hCode: HttpCode = Http200): untyped</a></li>
           <li><a class="reference external"
-          data-doc-search-tag="mike: send(body: string; code: HttpCode = Http200; headers: HttpHeaders = newHttpHeaders()): untyped" href="mike.html#send.t%2Cstring%2CHttpCode%2CHttpHeaders">mike: send(body: string; code: HttpCode = Http200; headers: HttpHeaders = newHttpHeaders()): untyped</a></li>
+          data-doc-search-tag="helpers: send(body: string; code: HttpCode = Http200; headers: HttpHeaders = newHttpHeaders()): untyped" href="mike/helpers.html#send.t%2Cstring%2CHttpCode%2CHttpHeaders">helpers: send(body: string; code: HttpCode = Http200; headers: HttpHeaders = newHttpHeaders()): untyped</a></li>
           <li><a class="reference external"
-          data-doc-search-tag="mike: send(reqBody: typed; hCode: HttpCode = Http200): untyped" href="mike.html#send.t%2Ctyped%2CHttpCode">mike: send(reqBody: typed; hCode: HttpCode = Http200): untyped</a></li>
+          data-doc-search-tag="helpers: send(reqBody: typed; hCode: HttpCode = Http200): untyped" href="mike/helpers.html#send.t%2Ctyped%2CHttpCode">helpers: send(reqBody: typed; hCode: HttpCode = Http200): untyped</a></li>
           </ul></dd>
 <dt><a name="startServer" href="#startServer"><span>startServer:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -187,7 +170,7 @@ function main() {
           </ul></dd>
 <dt><a name="toHeader" href="#toHeader"><span>toHeader:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="mike: toHeader(headers: openArray[(string, string)]): HttpHeaders" href="mike.html#toHeader.c%2CopenArray%5B%5D">mike: toHeader(headers: openArray[(string, string)]): HttpHeaders</a></li>
+          data-doc-search-tag="helpers: toHeader(headers: openArray[(string, string)]): HttpHeaders" href="mike/helpers.html#toHeader.c%2CopenArray%5B%5D">helpers: toHeader(headers: openArray[(string, string)]): HttpHeaders</a></li>
           </ul></dd>
 <dt><a name="toRequest" href="#toRequest"><span>toRequest:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -198,7 +181,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2020-09-05 18:24:02 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2020-09-06 10:03:05 UTC</small>
       </div>
     </div>
   </div>
