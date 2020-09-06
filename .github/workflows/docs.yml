@@ -25,7 +25,9 @@ jobs:
         nim-version: 'devel'
       
     - name: Generate Documentation
-      run: nimble genDoc
+      run: |
+        nimble update
+        nimble genDoc
     
     - name: deploy docs
       uses: appleboy/gh-pages-action@master
