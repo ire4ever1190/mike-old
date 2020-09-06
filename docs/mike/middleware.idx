@@ -1,0 +1,8 @@
+beforeRequestCalls	mike/middleware.html#beforeRequestCalls	middleware: beforeRequestCalls	
+afterRequestCalls	mike/middleware.html#afterRequestCalls	middleware: afterRequestCalls	
+beforeRequest	mike/middleware.html#beforeRequest.m,untyped	middleware: beforeRequest(body: untyped): untyped	
+afterRequest	mike/middleware.html#afterRequest.m,untyped	middleware: afterRequest(body: untyped): untyped	
+callBeforewares	mike/middleware.html#callBeforewares.m	middleware: callBeforewares(): untyped	
+callAfterwares	mike/middleware.html#callAfterwares.m	middleware: callAfterwares(): untyped	
+insertBefore	mike/middleware.html#insertBefore.m,untyped	middleware: insertBefore(body: untyped): untyped	
+callLogging	mike/middleware.html#callLogging,MikeRequest,string	middleware: callLogging(request: MikeRequest; prefix: string = &quot;&quot;)	
