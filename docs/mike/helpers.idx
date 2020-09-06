@@ -1,0 +1,15 @@
+send	mike/helpers.html#send,MikeRequest,string,HttpCode,HttpHeaders	helpers: send(request: MikeRequest; body: string = &quot;&quot;; code: HttpCode = Http200;\n     headers: HttpHeaders = newHttpHeaders())	
+send	mike/helpers.html#send.t,string,HttpCode,HttpHeaders	helpers: send(body: string; code: HttpCode = Http200; headers: HttpHeaders = newHttpHeaders()): untyped	
+send	mike/helpers.html#send.t,HttpCode,HttpHeaders	helpers: send(code: HttpCode; headers: HttpHeaders = newHttpHeaders()): untyped	
+body	mike/helpers.html#body.t	helpers: body(): untyped	
+headers	mike/helpers.html#headers.t	helpers: headers(): untyped	
+addHeader	mike/helpers.html#addHeader.t,string,string	helpers: addHeader(key, value: string)	
+json	mike/helpers.html#json.t	helpers: json(): untyped	
+json	mike/helpers.html#json.t,typedesc	helpers: json(obj: typedesc): untyped	
+form	mike/helpers.html#form,MikeRequest	helpers: form(request: MikeRequest): Table[string, string]	
+headers	mike/helpers.html#headers,openArray[]	helpers: headers(headers: openArray[(string, string)]): HttpHeaders	
+send	mike/helpers.html#send,MikeRequest,JsonNode,HttpCode	helpers: send(request: MikeRequest; reqBody: JsonNode; hCode: HttpCode = Http200)	
+send	mike/helpers.html#send.t,JsonNode,HttpCode	helpers: send(reqBody: JsonNode; hCode: HttpCode = Http200): untyped	
+send	mike/helpers.html#send.t,typed,HttpCode	helpers: send(reqBody: typed; hCode: HttpCode = Http200): untyped	
+form	mike/helpers.html#form,openArray[]	helpers: form(values: openArray[(string, string)]): string	
+toHeader	mike/helpers.html#toHeader.c,openArray[]	helpers: toHeader(headers: openArray[(string, string)]): HttpHeaders	
