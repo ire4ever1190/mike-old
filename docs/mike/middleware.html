@@ -180,9 +180,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 An example middleware Echos the request path with optional prefix
 &nbsp;&nbsp;<a
-href="https://github.com/ire4ever1190/mike/tree/master/src/mike/middleware.nim#L64"
+href="https://github.com/ire4ever1190/mike/tree/master/src/mike/middleware.nim#L111"
 class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/middleware.nim#L64" class="link-seesrc" target="_blank" >Edit</a>
+<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/middleware.nim#L111" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 
@@ -194,15 +194,19 @@ class="link-seesrc" target="_blank">Source</a>
 <dt><pre><span class="Keyword">macro</span> <a href="#beforeRequest.m%2Cuntyped"><span class="Identifier">beforeRequest</span></a><span class="Other">(</span><span class="Identifier">body</span><span class="Other">:</span> <span class="Identifier">untyped</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
 <dd>
 
-<p>Put all the code that you want to be called before a request like so.</p>
-<p><pre class="listing"><span class="Identifier">beforeRequest</span><span class="Punctuation">:</span>
-     <span class="Identifier">callLogging</span><span class="Punctuation">(</span><span class="Punctuation">)</span>
-</pre> Any calls put in here must have MikeRequest as their first parameter (this is likely to change in the future). Also checkout afterRequest if you want to run code after the request.</p>
+Put all the code that you want to be called before a request like so.<pre class="listing"><span class="Identifier">beforeRequest</span><span class="Punctuation">:</span>
+    <span class="Identifier">echo</span><span class="Punctuation">(</span><span class="StringLit">&quot;hello&quot;</span><span class="Punctuation">)</span> <span class="Comment"># this will be called before ever request</span>
+
+<span class="Comment"># Can also be done for certain routes</span>
+<span class="Identifier">beforeRequest</span><span class="Punctuation">:</span>
+    <span class="Identifier">echo</span><span class="Punctuation">(</span><span class="StringLit">&quot;certain route&quot;</span><span class="Punctuation">)</span>
+    <span class="Identifier">get</span> <span class="StringLit">&quot;/&quot;</span><span class="Punctuation">:</span>
+        <span class="Identifier">send</span><span class="Punctuation">(</span><span class="StringLit">&quot;hello&quot;</span><span class="Punctuation">)</span></pre><p>Any calls put in here must have MikeRequest as their first parameter (this is likely to change in the future). Also checkout afterRequest if you want to run code after the request.</p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/ire4ever1190/mike/tree/master/src/mike/middleware.nim#L21"
+href="https://github.com/ire4ever1190/mike/tree/master/src/mike/middleware.nim#L61"
 class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/middleware.nim#L21" class="link-seesrc" target="_blank" >Edit</a>
+<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/middleware.nim#L61" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 <a id="afterRequest.m,untyped"></a>
@@ -211,9 +215,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/ire4ever1190/mike/tree/master/src/mike/middleware.nim#L32"
+href="https://github.com/ire4ever1190/mike/tree/master/src/mike/middleware.nim#L79"
 class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/middleware.nim#L32" class="link-seesrc" target="_blank" >Edit</a>
+<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/middleware.nim#L79" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 <a id="callBeforewares.m"></a>
@@ -222,9 +226,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Returns the code which calls all the before middlewares
 &nbsp;&nbsp;<a
-href="https://github.com/ire4ever1190/mike/tree/master/src/mike/middleware.nim#L36"
+href="https://github.com/ire4ever1190/mike/tree/master/src/mike/middleware.nim#L83"
 class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/middleware.nim#L36" class="link-seesrc" target="_blank" >Edit</a>
+<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/middleware.nim#L83" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 <a id="callAfterwares.m"></a>
@@ -233,20 +237,23 @@ class="link-seesrc" target="_blank">Source</a>
 
 Returns the code which calls all the after middlewares
 &nbsp;&nbsp;<a
-href="https://github.com/ire4ever1190/mike/tree/master/src/mike/middleware.nim#L40"
+href="https://github.com/ire4ever1190/mike/tree/master/src/mike/middleware.nim#L87"
 class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/middleware.nim#L40" class="link-seesrc" target="_blank" >Edit</a>
+<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/middleware.nim#L87" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 <a id="insertBefore.m,untyped"></a>
-<dt><pre><span class="Keyword">macro</span> <a href="#insertBefore.m%2Cuntyped"><span class="Identifier">insertBefore</span></a><span class="Other">(</span><span class="Identifier">body</span><span class="Other">:</span> <span class="Identifier">untyped</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
+<dt><pre><span class="Keyword">macro</span> <a href="#insertBefore.m%2Cuntyped"><span class="Identifier">insertBefore</span></a><span class="Other">(</span><span class="Identifier">body</span><span class="Other">:</span> <span class="Identifier">untyped</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">deprecated</span><span class="Other">:</span> <span class="StringLit">&quot;Use beforeRequest instead&quot;</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
+  <div class="deprecation-message">
+    <b>Deprecated:</b> Use beforeRequest instead
+  </div>
 
 Like beforeRequest and afterRequest but used for adding middleware to certain routes. Helpful for adding things like authentication middleware to only certain routes
 &nbsp;&nbsp;<a
-href="https://github.com/ire4ever1190/mike/tree/master/src/mike/middleware.nim#L44"
+href="https://github.com/ire4ever1190/mike/tree/master/src/mike/middleware.nim#L91"
 class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/middleware.nim#L44" class="link-seesrc" target="_blank" >Edit</a>
+<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/middleware.nim#L91" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 
@@ -259,7 +266,7 @@ class="link-seesrc" target="_blank">Source</a>
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2020-09-06 10:11:03 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2020-09-06 13:03:01 UTC</small>
       </div>
     </div>
   </div>
