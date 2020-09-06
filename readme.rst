@@ -15,7 +15,7 @@ very simple to use web framework for easy prototyping and rapid development
     
     startServer()
 
-`index </theindex.html>`__
+`index <theindex.html>`__
 
 Installation
 ============
