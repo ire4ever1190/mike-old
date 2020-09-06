@@ -58,10 +58,10 @@ suite "Test authentication in routes":
         check response.code == Http200
         check response.body == "hello me"
     
-suite "Pattern matching in routes":
-    test "optional values in routes":
-        var response = getMock("/number/5")
-        check(response.body == "5")
-
-        response = getMock("/number/928")
-        check(response.body == "928")
+# suite "Pattern matching in routes":
+    # test "optional values in routes":
+        # var response = getMock("/number/5")
+        # check(response.body == "5")
+# 
+        # response = getMock("/number/928")
+        # check(response.body == "928")
