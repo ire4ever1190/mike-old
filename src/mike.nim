@@ -42,6 +42,8 @@ macro mockable*(prc: untyped): untyped =
         result = prc
 
 template startServer*(serverPort: int = 8080, numOfThreads: int = 1): untyped {.dirty.} =                                    
+    ## Starts the server.
+    ## Use this at the end of your main file to start the server.
     proc handleRequest*(req: Request): Future[void] {.mockable, async, gcsafe.} =
         when defined(testing):            
             request.futResponse = newFuture[MikeResponse]("Request handling")
