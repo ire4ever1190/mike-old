@@ -63,8 +63,18 @@ function main() {
 <div class="document" id="documentId">
   <div class="container">
     <h1 class="title">Index</h1>
-    Modules: <a href="mike.html">mike</a>, <a href="mike/helpers.html">mike/helpers</a>, <a href="mike/middleware.html">mike/middleware</a>, <a href="mike/request.html">mike/request</a>, <a href="mike/routes.html">mike/routes</a>.<br/><p /><h2>API symbols</h2>
-<dl><dt><a name="addHeader" href="#addHeader"><span>addHeader:</span></a></dt><dd><ul class="simple">
+    Modules: <a href="mike.html">mike</a>, <a href="mike/helpers.html">mike/helpers</a>, <a href="mike/middleware.html">mike/middleware</a>, <a href="mike/request.html">mike/request</a>.<br/><p /><h2>API symbols</h2>
+<dl><dt><a name="addCookie" href="#addCookie"><span>addCookie:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="helpers: addCookie(request: MikeRequest; key, value: string; expires: DateTime | Time;
+          domain = &quot;&quot;; path = &quot;&quot;; secure = false; httpOnly = false)" href="mike/helpers.html#addCookie%2CMikeRequest%2Cstring%2Cstring%2C%2Cstring%2Cstring">helpers: addCookie(request: MikeRequest; key, value: string; expires: DateTime | Time;
+          domain = &quot;&quot;; path = &quot;&quot;; secure = false; httpOnly = false)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="helpers: addCookie(request: MikeRequest; key, value: string; domain = &quot;&quot;; path = &quot;&quot;; expires = &quot;&quot;;
+          secure = false; httpOnly = false)" href="mike/helpers.html#addCookie%2CMikeRequest%2Cstring%2Cstring%2Cstring%2Cstring%2Cstring">helpers: addCookie(request: MikeRequest; key, value: string; domain = &quot;&quot;; path = &quot;&quot;; expires = &quot;&quot;;
+          secure = false; httpOnly = false)</a></li>
+          </ul></dd>
+<dt><a name="addHeader" href="#addHeader"><span>addHeader:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="helpers: addHeader(key, value: string)" href="mike/helpers.html#addHeader.t%2Cstring%2Cstring">helpers: addHeader(key, value: string)</a></li>
           </ul></dd>
@@ -100,6 +110,10 @@ function main() {
 <li><a class="reference external"
           data-doc-search-tag="middleware: callLogging(request: MikeRequest; prefix: string = &quot;&quot;)" href="mike/middleware.html#callLogging%2CMikeRequest%2Cstring">middleware: callLogging(request: MikeRequest; prefix: string = &quot;&quot;)</a></li>
           </ul></dd>
+<dt><a name="delCookie" href="#delCookie"><span>delCookie:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="helpers: delCookie(request: MikeRequest; key: string)" href="mike/helpers.html#delCookie%2CMikeRequest%2Cstring">helpers: delCookie(request: MikeRequest; key: string)</a></li>
+          </ul></dd>
 <dt><a name="form" href="#form"><span>form:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="helpers: form(request: MikeRequest): Table[string, string]" href="mike/helpers.html#form%2CMikeRequest">helpers: form(request: MikeRequest): Table[string, string]</a></li>
@@ -121,10 +135,6 @@ function main() {
           data-doc-search-tag="helpers: json(): untyped" href="mike/helpers.html#json.t">helpers: json(): untyped</a></li>
           <li><a class="reference external"
           data-doc-search-tag="helpers: json(obj: typedesc): untyped" href="mike/helpers.html#json.t%2Ctypedesc">helpers: json(obj: typedesc): untyped</a></li>
-          </ul></dd>
-<dt><a name="makeMethods" href="#makeMethods"><span>makeMethods:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="routes: makeMethods(): untyped" href="mike/routes.html#makeMethods.m">routes: makeMethods(): untyped</a></li>
           </ul></dd>
 <dt><a name="MikeRequest" href="#MikeRequest"><span>MikeRequest:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -181,15 +191,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-<<<<<<< HEAD
-<<<<<<< HEAD
-        <small style="color: var(--hint);">Made with Nim. Generated: 2020-09-06 13:00:08 UTC</small>
-=======
-        <small style="color: var(--hint);">Made with Nim. Generated: 2020-09-06 10:11:03 UTC</small>
->>>>>>> eddfbdb0925a2a371841cd84b761eedecd9377ac
-=======
-        <small style="color: var(--hint);">Made with Nim. Generated: 2020-09-06 13:03:01 UTC</small>
->>>>>>> bb1376de9f9a6d7d389f0649ed6eb676bcb39204
+        <small style="color: var(--hint);">Made with Nim. Generated: 2020-09-07 09:41:52 UTC</small>
       </div>
     </div>
   </div>
