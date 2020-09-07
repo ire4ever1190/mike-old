@@ -73,6 +73,7 @@ proc toRequest*(req: Request): MikeRequest =
 
     if req.headers.isSome:
         result.headers = req.headers.get()
+        result.cookies = parseCookies(result.headers.getOrDefault("cookie"))
     else:
         result.headers = newHttpHeaders()
     # Init the other objects
