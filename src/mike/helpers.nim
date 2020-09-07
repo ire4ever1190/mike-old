@@ -10,6 +10,8 @@ import mimetypes
 import asyncdispatch
 import httpx
 export request
+import cookies
+import times
 
 let mimeDB = newMimeTypes() 
 
@@ -104,5 +106,26 @@ proc form*(values: openarray[(string, string)]): string =
     for (key, value) in values:
         result &= key & "=" & encodeUrl(value) & "&"
     result.removeSuffix("&")
+
+proc addCookie*(request: MikeRequest, key, value: string, domain = "", path = "", expires = "", secure = false, httpOnly = false) =
+    ## Adds a cookie to the request which the client will set at their end
+    let cookie = setCookie(key, value, domain, path, expires, true, secure, httpOnly)
+    request.response.headers.add("Set-Cookie", cookie)
+
+proc addCookie*(request: MikeRequest, key, value: string, expires: DateTime|Time, domain = "", path = "", secure = false, httpOnly = false) =
+    ## Adds a cookie to the request which the client will set at their end
+    request.addCookie(
+        key,
+        value,
+        domain,
+        path,
+        format(expires.utc, "ddd',' dd MMM yyyy HH:mm:ss 'GMT'"),
+        secure,
+        httpOnly
+    )
+
+proc delCookie*(request: MikeRequest, key: string) =
+    ## Deletes a cookie from the client
+    request.addCookie(key, "", fromUnix(0))
 
 converter toHeader*(headers: openarray[(string, string)]): HttpHeaders = newHttpHeaders(headers)
