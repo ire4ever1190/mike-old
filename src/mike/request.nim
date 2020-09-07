@@ -48,7 +48,8 @@ proc newRequest*(httpMethod: HttpMethod, path: string, body: string = "", header
         httpMethod: httpMethod,
         body: body,
         queries: queries,
-        headers: headers
+        headers: headers,
+        cookies: parseCookies(headers.getOrDefault("cookie"))
     )
 
 proc newResponse*(): MikeResponse =
@@ -72,10 +73,8 @@ proc toRequest*(req: Request): MikeRequest =
 
     if req.headers.isSome:
         result.headers = req.headers.get()
-        result.cookies = parseCookies(result.headers["Cookie"])
     else:
         result.headers = newHttpHeaders()
-        result.cookies = newStringTable()
     # Init the other objects
     when not defined(testing):
         result.req = req
