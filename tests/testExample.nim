@@ -7,9 +7,9 @@ import base64
 
 suite "Test GET handling":
     test "Basic route":
-        let response = getMock("/")
+        var response = getMock("/")
         check(response.body == "hello")
-
+        
     test "Query params":
         let response = getMock("/echo?msg=hello there")
         check(response.body == "hello there")
@@ -30,34 +30,58 @@ suite "Test GET handling":
         let response = getMock("/404")
         check response.code == Http404
 
+    test "Trailing slash":
+        let response = getMock("/jsonresponse/")
+        check(response.code == Http404)
+
+
 suite "Test POST handling":
-    test "POST json":
+    test "json":
         let response = postMock("/json", $ %*{"msg": "general kenobi"})
         check(response.body == "general kenobi")
 
 
-    test "POST form request":
+    test "form request":
         let response = postMock("/form", form {
             "msg": "you are a bold one"  
         })
         check(response.body == "you are a bold one")
 
 suite "Test authentication in routes":
-    test "Basic: no username or password":
+    test "no username or password":
         let response = getMock("/private")
         check response.code == Http401
 
-    test "Basic: wrong username and password":
+    test "wrong username and password":
         let payload = encode("john:432")
         let response = getMock("/private", newHttpHeaders({"Authorization": "Basic " & payload}))
         check response.code == Http401
 
-    test "Basic: correct username and password":
+    test "correct username and password":
         let payload = encode("user:123")
         let response = getMock("/private", newHttpHeaders({"Authorization": "Basic " & payload}))
         check response.code == Http200
         check response.body == "hello me"
-    
+
+suite "Test Cookies":
+    test "No cookie":
+        let response = getMock("/echocookie")
+        check response.code == Http400
+
+    test "Send cookie":
+        let response = getMock("/echocookie", newHttpHeaders {"Cookie": "msg=hello world"})
+        check response.body == "hello world"
+
+    test "Get cookie":
+        let response = getMock("/getcookie")
+        check response.headers.hasKey("set-cookie")
+        echo(response.headers["set-cookie"])
+        check response.headers["set-cookie"] == "hasVisited=true"
+        
+    test "Remove cookie":
+        let response = getMock("/takecookie")
+        check response.headers.hasKey("set-cookie")
+        check response.headers["set-cookie"] == "hasVisited=; Expires=Thu, 01 Jan 1970 00:00:00 GMT"
 # suite "Pattern matching in routes":
     # test "optional values in routes":
         # var response = getMock("/number/5")
