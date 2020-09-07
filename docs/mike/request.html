@@ -107,6 +107,7 @@ function main() {
   queries*: Table[string, string]
   headers*: HttpHeaders
   response*: MikeResponse
+  cookies*: StringTableRef
   when not false:
       req*: Request
 
@@ -149,9 +150,9 @@ function main() {
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/ire4ever1190/mike/tree/master/src/mike/request.nim#L11"
+href="https://github.com/ire4ever1190/mike/tree/master/src/mike/request.nim#L14"
 class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/request.nim#L11" class="link-seesrc" target="_blank" >Edit</a>
+<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/request.nim#L14" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 <a id="MikeRequest"></a>
@@ -162,6 +163,7 @@ class="link-seesrc" target="_blank">Source</a>
   <span class="Identifier">queries</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">Table</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">,</span> <span class="Identifier">string</span><span class="Other">]</span>
   <span class="Identifier">headers</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">HttpHeaders</span>
   <span class="Identifier">response</span><span class="Operator">*</span><span class="Other">:</span> <a href="request.html#MikeResponse"><span class="Identifier">MikeResponse</span></a>
+  <span class="Identifier">cookies</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">StringTableRef</span>
   <span class="Keyword">when</span> <span class="Keyword">not</span> <span class="DecNumber">false</span><span class="Other">:</span>
       <span class="Identifier">req</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">Request</span>
 
@@ -173,9 +175,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/ire4ever1190/mike/tree/master/src/mike/request.nim#L17"
+href="https://github.com/ire4ever1190/mike/tree/master/src/mike/request.nim#L20"
 class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/request.nim#L17" class="link-seesrc" target="_blank" >Edit</a>
+<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/request.nim#L20" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 
@@ -185,15 +187,15 @@ class="link-seesrc" target="_blank">Source</a>
 <dl class="item">
 <a id="newRequest,HttpMethod,string,string,HttpHeaders"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#newRequest%2CHttpMethod%2Cstring%2Cstring%2CHttpHeaders"><span class="Identifier">newRequest</span></a><span class="Other">(</span><span class="Identifier">httpMethod</span><span class="Other">:</span> <span class="Identifier">HttpMethod</span><span class="Other">;</span> <span class="Identifier">path</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">body</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Other">=</span> <span class="StringLit">&quot;&quot;</span><span class="Other">;</span>
-               <span class="Identifier">headers</span><span class="Other">:</span> <span class="Identifier">HttpHeaders</span> <span class="Other">=</span> <span class="Identifier">newHttpHeaders</span><span class="Other">(</span><span class="Other">)</span><span class="Other">)</span><span class="Other">:</span> <a href="request.html#MikeRequest"><span class="Identifier">MikeRequest</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+               <span class="Identifier">headers</span><span class="Other">:</span> <span class="Identifier">HttpHeaders</span> <span class="Other">=</span> <span class="Identifier">newHttpHeaders</span><span class="Other">(</span><span class="Other">)</span><span class="Other">)</span><span class="Other">:</span> <a href="request.html#MikeRequest"><span class="Identifier">MikeRequest</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/ire4ever1190/mike/tree/master/src/mike/request.nim#L40"
+href="https://github.com/ire4ever1190/mike/tree/master/src/mike/request.nim#L44"
 class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/request.nim#L40" class="link-seesrc" target="_blank" >Edit</a>
+<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/request.nim#L44" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 <a id="newResponse"></a>
@@ -202,9 +204,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/ire4ever1190/mike/tree/master/src/mike/request.nim#L50"
+href="https://github.com/ire4ever1190/mike/tree/master/src/mike/request.nim#L55"
 class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/request.nim#L50" class="link-seesrc" target="_blank" >Edit</a>
+<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/request.nim#L55" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 <a id="toRequest,Request"></a>
@@ -213,9 +215,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Converts a httpx request into a mike request This is done to allow easier processing later on
 &nbsp;&nbsp;<a
-href="https://github.com/ire4ever1190/mike/tree/master/src/mike/request.nim#L57"
+href="https://github.com/ire4ever1190/mike/tree/master/src/mike/request.nim#L62"
 class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/request.nim#L57" class="link-seesrc" target="_blank" >Edit</a>
+<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/request.nim#L62" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 
@@ -228,15 +230,7 @@ class="link-seesrc" target="_blank">Source</a>
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-<<<<<<< HEAD
-<<<<<<< HEAD
-        <small style="color: var(--hint);">Made with Nim. Generated: 2020-09-06 13:00:08 UTC</small>
-=======
-        <small style="color: var(--hint);">Made with Nim. Generated: 2020-09-06 10:11:02 UTC</small>
->>>>>>> eddfbdb0925a2a371841cd84b761eedecd9377ac
-=======
-        <small style="color: var(--hint);">Made with Nim. Generated: 2020-09-06 13:03:01 UTC</small>
->>>>>>> bb1376de9f9a6d7d389f0649ed6eb676bcb39204
+        <small style="color: var(--hint);">Made with Nim. Generated: 2020-09-07 09:41:52 UTC</small>
       </div>
     </div>
   </div>
