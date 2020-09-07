@@ -9,7 +9,7 @@ var
     routes     {.compileTime.} = initTable[string, NimNode]()
     slowRoutes {.compileTime.} = initTable[string, NimNode]() # Optional value routes, regex routes etc
 
-macro makeMethods*(): untyped =
+macro makeMethods(): untyped =
     ## **USED INTERNALLY**.
     ## Creates all the macros for creating routes
     result = newStmtList()
@@ -35,9 +35,11 @@ macro createRoutes*(): untyped =
         routeCase.add(
             nnkOfBranch.newTree(newLit(route), body)
         )
-    routeCase.add(
-        nnkElse.newTree(parseExpr("send(Http404)"))
+    # routeCase.add(
+        # nnkElse.newTree(parseExpr("send(Http404)"))
+    # )
+    result = newStmtList(
+        routeCase,
+        parseExpr("send(Http404)")
     )
-    result = routeCase
-
 makeMethods()
