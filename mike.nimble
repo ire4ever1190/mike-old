@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.4.7"
+version       = "0.4.8"
 author        = "Jake Leahy"
 description   = "A very simple micro web framework"
 license       = "MIT"
