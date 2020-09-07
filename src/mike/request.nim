@@ -6,6 +6,9 @@ import options
 import strutils
 import tables
 import uri
+import strtabs
+export strtabs
+import cookies
 
 type 
     MikeResponse* = object
@@ -21,6 +24,7 @@ type
         queries*: Table[string, string]
         headers*: HttpHeaders
         response*: MikeResponse 
+        cookies*: StringTableRef
         when not defined(testing):
             req*: Request
         else:
@@ -68,9 +72,10 @@ proc toRequest*(req: Request): MikeRequest =
 
     if req.headers.isSome:
         result.headers = req.headers.get()
+        result.cookies = parseCookies(result.headers["Cookie"])
     else:
         result.headers = newHttpHeaders()
-        
+        result.cookies = newStringTable()
     # Init the other objects
     when not defined(testing):
         result.req = req
