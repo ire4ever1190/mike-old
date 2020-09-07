@@ -47,9 +47,22 @@ get "/fred":
 
 get "/number/{selectedNumber}":
     send("j")
-    # send(selectedNumber)
 
-insertBefore:
+get "/echocookie":
+    if request.cookies.hasKey("msg"):
+        send(request.cookies["msg"])
+    else:
+        send(Http400)
+
+get "/getcookie":
+    request.addCookie("hasVisited", $true)
+    send(Http200)
+
+get "/takecookie":
+    request.delCookie("hasVisited")
+    send(Http200)
+    
+beforeRequest:
     basicAuth(request, "user", "123")
     get "/private":
         send "hello me"
@@ -57,7 +70,6 @@ insertBefore:
     get "/private2":
         send "hello me again"
 
-callLogging(MikeRequest(), "handling")
 beforeRequest:
     # All calls in here are called before a request
     # Their first parameter must be MikeRequest but you do not pass it here
