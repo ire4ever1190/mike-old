@@ -24,6 +24,13 @@ export options
 export strutils
 export asyncdispatch
 
+type
+    MikeSettings* = object
+        port*: int
+        address*: string
+        serveStatic*: seq[string]
+        threads: int
+
 macro mockable*(prc: untyped): untyped =
     ## Changes the handleRequest proc to use MockRequest
     ## Just changes the input and return type along with moving the async pragma 
@@ -43,7 +50,15 @@ macro mockable*(prc: untyped): untyped =
     else:
         result = prc
 
-template startServer*(serverPort: int = 8080, numOfThreads: int = 1): untyped {.dirty.} =                                    
+proc makeSettings*(port: int = 8080, address: string = "", serveStatic: openArray[string] = [], threads: int = 1): MikeSettings =
+    result = MikeSettings(
+        port: port,
+        address: address,
+        serveStatic: @serveStatic,
+        threads: threads,
+    )
+
+template startServer*(mikeSettings: MikeSettings): untyped {.dirty.} =                                    
     ## Starts the server.
     ## Use this at the end of your main file to start the server.
     proc handleRequest*(req: Request): Future[void] {.mockable, async, gcsafe.} =
@@ -58,7 +73,10 @@ template startServer*(serverPort: int = 8080, numOfThreads: int = 1): untyped {.
             echo($httpMethod & " " & request.path & " " & $request.queries)
         try:
             callBeforewares()
-            createRoutes() # Create a case statement which contains the code for the routes
+            if mikeSettings.serveStatic.len != 0 and checkServedStaticByPath(request.path, mikeSettings.serveStatic):
+                await request.sendFile(request.path)
+            else:
+                createRoutes() # Create a case statement which contains the code for the routes
             callAfterwares()
         except:
             let
@@ -68,6 +86,11 @@ template startServer*(serverPort: int = 8080, numOfThreads: int = 1): untyped {.
             send(Http500)
 
     when not defined(testing):
-        let settings = initSettings(Port(serverPort), numThreads = numOfThreads)
-        echo("Mike is here to help on port " & $serverPort)
-        run(handleRequest, settings = settings)
+        let nativeSettings = initSettings(Port(mikeSettings.port), numThreads = mikeSettings.threads)
+        echo("Mike is here to help on port " & $mikeSettings.port)
+        run(handleRequest, nativeSettings)
+
+template startServer*(serverPort: int = 8080, numOfThreads: int = 1): untyped {.deprecated: "Use MikeSettings (via makeSettings proc) instead of plain arguments".} =
+    let serverSettings = makeSettings(port = serverPort, threads = numOfThreads)
+    startServer(serverSettings)
+
