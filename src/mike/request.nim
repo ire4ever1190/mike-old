@@ -15,7 +15,8 @@ type
         body*: string
         code*: HttpCode
         headers*: HttpHeaders
-    
+        raw*: string
+            
     ## Called MikeRequest to reduce confusion with httpx Request
     MikeRequest* = ref object
         path*: string
@@ -28,8 +29,7 @@ type
         when not defined(testing):
             req*: Request
         else:
-            futResponse*: Future[MikeResponse]
-
+            finished*: bool
 proc parsePath*(path: string): tuple[path: string, query: Table[string, string]] =
     ## Parses a path into the actual path and it's query parameters
     if path.contains("?"):

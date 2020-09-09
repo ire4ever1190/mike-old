@@ -37,8 +37,6 @@ macro mockable*(prc: untyped): untyped =
                     newIdentNode("MikeRequest"),
                     newEmptyNode()
                 )
-            elif node.kind == nnkPragma:
-                node.del(0) # Remove the async pragma since it is not needed when testing
             result &= node
     else:
         result = prc
@@ -48,18 +46,20 @@ template startServer*(serverPort: int = 8080, numOfThreads: int = 1): untyped {.
     ## Use this at the end of your main file to start the server.
     proc handleRequest*(req: Request): Future[void] {.mockable, async, gcsafe.} =
         when defined(testing):            
-            request.futResponse = newFuture[MikeResponse]("Request handling")
-            result = request.futResponse
             request.response = newResponse()
         else:
             var request = req.toRequest()
         let httpMethod = request.httpMethod
         if defined(debug):
+            # Log all the requests during debug
+            # TODO add `$` proc for request that does this
             echo($httpMethod & " " & request.path & " " & $request.queries)
         try:
             callBeforewares()
             createRoutes() # Create a case statement which contains the code for the routes
             callAfterwares()
+            when defined(testing):
+                return request.response
         except:
             let
                 e = getCurrentException()
