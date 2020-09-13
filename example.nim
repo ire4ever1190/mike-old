@@ -45,8 +45,12 @@ get "/fred":
     let person = Person(name: "Fred", age: 54)
     send(person)
 
-get "/number/{selectedNumber}":
-    send("j")
+
+get "/person/{name}":
+    send("Hello " & name)
+
+get "/person/{name}/age/{age}":
+    send(fmt"Hello {name} aged {age}")
 
 get "/echocookie":
     if request.cookies.hasKey("msg"):
@@ -62,6 +66,7 @@ get "/takecookie":
     request.delCookie("hasVisited")
     send(Http200)
     
+
 beforeRequest:
     basicAuth(request, "user", "123")
     get "/private":
