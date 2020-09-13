@@ -61,16 +61,18 @@ you can also add middleware to be called before all your requests
 Cookies? no problem
 
 .. code-block:: nim
-  get "/haveibeenhere":
-      if request.cookies.haskey("beenHere"):
-          send("Yes you have")
-      else:
-          request.addCookie("beenHere", $true)
-          send("No, but you have now")
+
+    get "/haveibeenhere":
+        if request.cookies.haskey("beenHere"):
+            send("Yes you have")
+        else:
+            request.addCookie("beenHere", $true)
+            send("No, but you have now")
 
 You can also put parameters in your routes.
 
 .. code-block:: nim
+
     get "/person/{name}":
         send("Hello" & name) # Name variable is automatically created
         
