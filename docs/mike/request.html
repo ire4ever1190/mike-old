@@ -98,7 +98,8 @@ function main() {
     title="MikeResponse = object
   body*: string
   code*: HttpCode
-  headers*: HttpHeaders"><wbr />Mike<wbr />Response<span class="attachedType"></span></a></li>
+  headers*: HttpHeaders
+  raw*: string"><wbr />Mike<wbr />Response<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#MikeRequest"
     title="MikeRequest = ref object
   path*: string
@@ -112,7 +113,7 @@ function main() {
       req*: Request
 
   else:
-      futResponse*: Future[MikeResponse]"><wbr />Mike<wbr />Request<span class="attachedType"></span></a></li>
+      finished*: bool"><wbr />Mike<wbr />Request<span class="attachedType"></span></a></li>
 
   </ul>
 </li>
@@ -145,6 +146,7 @@ function main() {
   <span class="Identifier">body</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">string</span>
   <span class="Identifier">code</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">HttpCode</span>
   <span class="Identifier">headers</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">HttpHeaders</span>
+  <span class="Identifier">raw</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">string</span>
 </pre></dt>
 <dd>
 
@@ -168,16 +170,16 @@ class="link-seesrc" target="_blank">Source</a>
       <span class="Identifier">req</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">Request</span>
 
   <span class="Keyword">else</span><span class="Other">:</span>
-      <span class="Identifier">futResponse</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">MikeResponse</span><span class="Other">]</span>
+      <span class="Identifier">finished</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span>
 
   </pre></dt>
 <dd>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/ire4ever1190/mike/tree/master/src/mike/request.nim#L20"
+href="https://github.com/ire4ever1190/mike/tree/master/src/mike/request.nim#L21"
 class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/request.nim#L20" class="link-seesrc" target="_blank" >Edit</a>
+<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike/request.nim#L21" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 
@@ -230,7 +232,7 @@ class="link-seesrc" target="_blank">Source</a>
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2020-09-13 03:57:09 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2020-09-13 06:35:53 UTC</small>
       </div>
     </div>
   </div>
