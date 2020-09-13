@@ -82,10 +82,17 @@ suite "Test Cookies":
         let response = getMock("/takecookie")
         check response.headers.hasKey("set-cookie")
         check response.headers["set-cookie"] == "hasVisited=; Expires=Thu, 01 Jan 1970 00:00:00 GMT"
-# suite "Pattern matching in routes":
-    # test "optional values in routes":
-        # var response = getMock("/number/5")
-        # check(response.body == "5")
-# 
-        # response = getMock("/number/928")
-        # check(response.body == "928")
+
+suite "Pattern matching in routes":
+    test "variable values in routes":
+        let response = getMock("/person/john")
+        check response.body == "Hello john"
+
+    test "Two variable values":
+        let response = getMock("/person/john/age/18")
+        check response.body == "Hello john aged 18"
+        
+    test "Variable route that extends further":
+        let response = getMock("/person/john/hello")
+        check response.code == Http404
+        check response.body != "7"
