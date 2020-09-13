@@ -30,7 +30,7 @@ How To
 The `example <https://github.com/ire4ever1190/mike/blob/master/example.nim>`__ file is a good example for how to use the lib
 
 testing is also easy with the built in mock testing
-just have :code:`-d:testing` defined somewhere when running your tests and you will be able to mock test like so
+just have `-d:testing` defined somewhere when running your tests and you will be able to mock test like so
 
 .. code-block:: nim
 
