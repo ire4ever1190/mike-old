@@ -58,7 +58,23 @@ you can also add middleware to be called before all your requests
  
     startServer()
 
-Cookies? no problem
+The syntax to only apply middlewares to certain routes is also similar
+
+.. code-block:: nim
+
+    proc logCall(request: MikeRequest) =
+        echo("Got call: " & request.path)
+    
+    beforeRequest:
+        logCall(request)
+        get "/": # Will be logged because the middleware is being applied
+            send("hello")
+    
+    get "/dontlog": # Will not be logged because the middleware is not applied
+ 
+    startServer()
+
+Cookies
 
 .. code-block:: nim
 
