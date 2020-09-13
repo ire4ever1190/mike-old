@@ -57,9 +57,11 @@ template startServer*(serverPort: int = 8080, numOfThreads: int = 1): untyped {.
         if defined(debug):
             echo($httpMethod & " " & request.path & " " & $request.queries)
         try:
+            let fullPath = $httpMethod & request.path
             callBeforewares()
             createRoutes() # Create a case statement which contains the code for the routes
             callAfterwares()
+            send(Http404)
         except:
             let
                 e = getCurrentException()
