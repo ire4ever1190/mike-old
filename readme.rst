@@ -58,4 +58,20 @@ you can also add middleware to be called before all your requests
  
     startServer()
 
+Cookies? no problem
+
+.. code-block:: nim
+  get "/haveibeenhere":
+      if request.cookies.haskey("beenHere"):
+          send("Yes you have")
+      else:
+          request.addCookie("beenHere", $true)
+          send("No, but you have now")
+
+You can also put parameters in your routes.
+
+.. code-block:: nim
+    get "/person/{name}":
+        send("Hello" & name) # Name variable is automatically created
+        
 made in `Nim <https://nim-lang.org/>`__ with `httpx <https://github.com/xflywind/httpx>`__ backend, inspired by `Kemal <https://kemalcr.com/>`__
