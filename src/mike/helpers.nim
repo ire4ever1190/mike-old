@@ -1,3 +1,4 @@
+import os
 import json
 import uri
 import options
@@ -12,6 +13,7 @@ import httpx
 export request
 import cookies
 import times
+import asyncfile
 
 let mimeDB = newMimeTypes() 
 
@@ -38,7 +40,6 @@ proc send*(request: MikeRequest, body: string = "", code: HttpCode = Http200, he
             request.finished = true
     else:
         request.req.send(code, body, headerToString request.response.headers)
-
 
 template send*(body: string, code: HttpCode = Http200, headers: HttpHeaders = newHttpHeaders()): untyped =
     ## Respond back to the request implicitly.
@@ -67,7 +68,79 @@ template json*(obj: typedesc): untyped =
     ## Gets json from the body and converts to a type
     json().to(obj)
 
+proc sendRaw*(request: MikeRequest, code: HttpCode, body: string, headers = "", overwriteHeaders: bool = false) =
+    var text = ("HTTP/1.1 $#") % [$code]
 
+    if overwriteHeaders:
+        text = text & headers
+    else:
+        text = text & ("\c\LContent-Length: $#\c\L$#") % [$body.len, headers]
+    
+    request.req.unsafeSend(text & "\c\L\c\L" & body)
+
+proc sendFile*(request: MikeRequest, filePath: string, mime: string = "", charset: string = "utf-8", code: HttpCode = Http200, headers: HttpHeaders = newHttpHeaders()) {.async.} =
+    let filePath = filePath.strip(trailing = false, chars = {'/'})
+    var fileInfo: FileInfo
+    try:
+        fileInfo = getFileInfo(filePath)
+    except:
+        send("Not found", Http404, headers)
+
+    # if server does not have permissions to read requested file - respond with 403 code
+    if fpOthersRead notin fileInfo.permissions:
+        send("Forbidden", Http403, headers)
+        return
+
+    let filePathParts = splitFile(filePath)
+
+    # get mime type for requested file if not set by developer
+    var mimetype = mime
+    if mimetype.len == 0:
+        var ext = if filePathParts.ext.len > 0:
+            filePathParts.ext.substr(1)
+          else:
+            ""
+
+        mimetype = mimeDB.getMimetype(ext)
+
+    # Merge the headers
+    for (key, value) in headers.pairs:
+        request.response.headers[key] = value
+
+    # set headers for file response
+    if mimetype.len != 0:
+        request.response.headers.add("Content-Type", mimetype & "; " & charset)
+    request.response.headers.add("Last-Modified", $fileInfo.lastWriteTime)
+    echo fileInfo.size
+    # if file size less then 20M bytes - send with default method, else send by blocks
+    if fileInfo.size < 20000000:
+        request.req.send(code, readFile(filePath), headerToString request.response.headers)
+    else:
+        request.response.headers.add("Content-Length", $fileInfo.size)
+        request.sendRaw(code, "", "\c\L" & headerToString(request.response.headers), true)
+        let fileContent = openAsync(filePath)
+
+        while true:
+            let value = await fileContent.read(4096)
+            if value.len > 0:
+                request.req.unsafeSend(value)
+            else:
+                break
+
+        fileContent.close()
+
+
+proc checkServedStaticByPath*(path: string, staticDirs: openArray[string]): bool =
+    result = false
+    let clearPath = path.strip(trailing = false, chars = {'/'})
+    if not fileExists(clearPath):
+        return
+
+    let fileInfo = splitFile(clearPath)
+
+    for dir in staticDirs:
+        if fileInfo.dir.startsWith(dir.strip(trailing = false, chars = {'/'})):
+            return true
 
 proc getOrDefault[T](value: Option[T]): T =
     ## Gets the value of Option[T] or else gets the default value of T

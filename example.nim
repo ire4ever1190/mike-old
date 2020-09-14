@@ -84,4 +84,5 @@ afterRequest:
     # All calls in here are called after a request
     request.callLogging("Handled")
 
-startServer() # The callLogging middleware echos each request
+let settings = makeSettings(serveStatic = ["/example_static"])
+startServer(settings) # The callLogging middleware echos each request
