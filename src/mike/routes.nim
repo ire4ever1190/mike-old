@@ -108,7 +108,7 @@ macro createRoutes*(): untyped =
                         )
                     ))
                 else:
-                    if "{" in path: # If the path is a parameter 
+                    if path[0] == '{' and path[^1] == '}': # If the path is a parameter 
                         result.add nnkElse.newTree(
                             addCases(newNode, i + 1, completePath & path & "/")
                         )
@@ -117,6 +117,7 @@ macro createRoutes*(): untyped =
 
     routeCase.add(
         nnkElse.newTree(
+            newStmtList(
             nnkTryStmt.newTree(
                 newStmtList(
                     parseExpr("let routeComponents = fullPath.split('/')"),
@@ -127,10 +128,11 @@ macro createRoutes*(): untyped =
                     it was correct at the start but then they went over too much
                 ]#
                 nnkExceptBranch.newTree( 
-                    newIdentNode("IndexDefect"),
+                    newIdentNode((if defined(IndexDefect): "IndexDefect" else: "IndexError")),
                     parseExpr("send(Http404)")
                 )
-            )
+            ),
+            parseStmt("send(Http404)"))
         )
     )
     return routeCase
