@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.5.0"
+version       = "0.5.1"
 author        = "Jake Leahy"
 description   = "A very simple micro web framework"
 license       = "MIT"
@@ -34,3 +34,7 @@ task genDoc, "Generates the doc":
 
 task workspace, "Internal use, loads up all the files":
     exec("micro src/mike.nim src/mike/*.nim")
+
+task benchmark, "Runs the benchmarks":
+    cd("benchmarks")
+    exec("nim c -r benchmark")
