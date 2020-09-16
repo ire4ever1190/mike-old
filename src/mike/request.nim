@@ -26,10 +26,10 @@ type
         headers*: HttpHeaders
         response*: MikeResponse 
         cookies*: StringTableRef
+        finished*: bool
         when not defined(testing):
             req*: Request
-        else:
-            finished*: bool
+        
 proc parsePath*(path: string): tuple[path: string, query: Table[string, string]] =
     ## Parses a path into the actual path and it's query parameters
     if path.contains("?"):

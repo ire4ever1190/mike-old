@@ -35,10 +35,11 @@ proc send*(request: MikeRequest, body: string = "", code: HttpCode = Http200, he
         if not request.finished:
             request.response.body = body
             request.response.code = code
-            request.finished = true
+
     else:
         request.req.send(code, body, headerToString request.response.headers)
-
+    request.finished = true # Allows to see if a 404 needs to be sent
+    # echo(request.finished)
 
 template send*(body: string, code: HttpCode = Http200, headers: HttpHeaders = newHttpHeaders()): untyped =
     ## Respond back to the request implicitly.
@@ -66,8 +67,6 @@ template json*(): untyped =
 template json*(obj: typedesc): untyped =
     ## Gets json from the body and converts to a type
     json().to(obj)
-
-
 
 proc getOrDefault[T](value: Option[T]): T =
     ## Gets the value of Option[T] or else gets the default value of T

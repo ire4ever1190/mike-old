@@ -26,11 +26,11 @@ macro makeMethods(): untyped =
             
         result.add quote do:
             macro `macroIdent`* (route: string, body: untyped) =
+                let key = `methodString` & route.strVal()
                 if route.strVal().contains("{"):
-                    echo("slow route")
-                    variableRoutes[`methodString` & route.strVal()] = body
+                    variableRoutes[key] = body
                 else:
-                    routes[`methodString` & route.strVal()] = body
+                    routes[key] = body
 
 type Node = ref object
     data: ref Table[string, Node]
@@ -98,41 +98,45 @@ macro createRoutes*(): untyped =
                             let name = x[1..^2] # Remove the {}
                             handler &= parseExpr(fmt"let {name} = routeComponents[{index}]")
                     handler &= newNode.value.get()
-                    result &= nnkElse.newTree(nnkIfStmt.newTree(
-                        nnkElifBranch.newTree(
-                            parseExpr(fmt"len(routeComponents) == {len(pathComponents)}"),
-                            handler
-                        ),
-                        nnkElse.newTree(
-                            addCases(newNode, i + 1, completePath & path & "/")
+                    result &= nnkElse.newTree(
+                        # This if statement checks that the path is the the correct one that the user has specified
+                        nnkIfStmt.newTree(
+                            nnkElifBranch.newTree(
+                                parseExpr(fmt"len(routeComponents) == {len(pathComponents)}"),
+                                handler
+                            ),
+                            nnkElse.newTree(
+                                addCases(newNode, i + 1, completePath & path & "/")
+                            )
                         )
-                    ))
+                    )
                 else:
                     if path[0] == '{' and path[^1] == '}': # If the path is a parameter 
                         result.add nnkElse.newTree(
                             addCases(newNode, i + 1, completePath & path & "/")
                         )
+
                     else:
                         result.add nnkOfBranch.newTree(newLit(path), addCases(newNode, i + 1, completePath & path & "/"))
 
     routeCase.add(
         nnkElse.newTree(
             newStmtList(
-            nnkTryStmt.newTree(
-                newStmtList(
-                    parseExpr("let routeComponents = fullPath.split('/')"),
-                    addCases(variableRouteTree, 0, "")   
-                ),
-                #[
-                    An IndexDefect will be thrown if the user is trying to access a route where
-                    it was correct at the start but then they went over too much
-                ]#
-                nnkExceptBranch.newTree( 
-                    newIdentNode((if defined(IndexDefect): "IndexDefect" else: "IndexError")),
-                    parseExpr("send(Http404)")
+                nnkTryStmt.newTree(
+                    newStmtList(
+                        parseExpr("let routeComponents = fullPath.split('/')"),
+                        addCases(variableRouteTree, 0, "")   
+                    ),
+                    #[
+                        An IndexDefect will be thrown if the user is trying to access a route where
+                        it was correct at the start but then they went over too much
+                    ]#
+                    nnkExceptBranch.newTree( 
+                        newIdentNode((if defined(IndexDefect): "IndexDefect" else: "IndexError")), # IndexDefect is only in > 1.3 
+                        parseExpr("send(Http404)")
+                    )
                 )
-            ),
-            parseStmt("send(Http404)"))
+            )
         )
     )
     return routeCase

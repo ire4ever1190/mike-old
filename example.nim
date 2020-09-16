@@ -80,8 +80,4 @@ beforeRequest:
     # Their first parameter must be MikeRequest but you do not pass it here
     request.callLogging("Handling")
 
-afterRequest:
-    # All calls in here are called after a request
-    request.callLogging("Handled")
-
 startServer() # The callLogging middleware echos each request

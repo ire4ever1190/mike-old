@@ -59,7 +59,10 @@ template startServer*(serverPort: int = 8080, numOfThreads: int = 1): untyped {.
             callBeforewares()
             createRoutes() # Create a case statement which contains the code for the routes
             callAfterwares()
-            send(Http404)
+            
+            if not request.finished:
+                send(Http404)
+                
             when defined(testing):
                 return request.response
         except:
