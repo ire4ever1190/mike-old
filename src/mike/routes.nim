@@ -132,7 +132,7 @@ macro createRoutes*(): untyped =
                         it was correct at the start but then they went over too much
                     ]#
                     nnkExceptBranch.newTree( 
-                        newIdentNode((if defined(IndexDefect): "IndexDefect" else: "IndexError")), # IndexDefect is only in > 1.3 
+                        newIdentNode((if declared(IndexDefect): "IndexDefect" else: "IndexError")), # IndexDefect is only in > 1.3 
                         parseExpr("send(Http404)")
                     )
                 )
