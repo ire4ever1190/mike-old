@@ -55,13 +55,15 @@ template startServer*(serverPort: int = 8080, numOfThreads: int = 1): untyped {.
             # TODO add `$` proc for request that does this
             echo($httpMethod & " " & request.path & " " & $request.queries)
         try:
-            let fullPath = $httpMethod & request.path
-            callBeforewares()
-            createRoutes() # Create a case statement which contains the code for the routes
-            callAfterwares()
-            
-            if not request.finished:
+            block routes:
+                let fullPath = $httpMethod & request.path
+                callBeforewares()
+                createBasicRoutes() # Create a case statement which contains the code for the routes
+                createParameterRoutes()
+                callAfterwares()
                 send(Http404)
+            
+            # if not request.finished:
                 
             when defined(testing):
                 return request.response
