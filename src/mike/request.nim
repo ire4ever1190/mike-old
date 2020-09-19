@@ -4,11 +4,13 @@ import asyncfutures
 import httpx
 import options
 import strutils
+import strformat
 import tables
 import uri
 import strtabs
 export strtabs
 import cookies
+import macros
 
 type 
     MikeResponse* = object
@@ -30,6 +32,11 @@ type
         when not defined(testing):
             req*: Request
         
+proc `$`*(request: MikeRequest): string =
+    result &= &"{request.httpMethod}: {request.path}"
+    if request.body != "":
+        result &= &"\nbody:\n{request.body}"
+
 proc parsePath*(path: string): tuple[path: string, query: Table[string, string]] =
     ## Parses a path into the actual path and it's query parameters
     if path.contains("?"):

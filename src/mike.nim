@@ -52,19 +52,19 @@ template startServer*(serverPort: int = 8080, numOfThreads: int = 1): untyped {.
         let httpMethod = request.httpMethod
         if defined(debug):
             # Log all the requests during debug
-            # TODO add `$` proc for request that does this
-            echo($httpMethod & " " & request.path & " " & $request.queries)
+            echo(request)
         try:
             block routes:
                 let fullPath = $httpMethod & request.path
                 callBeforewares()
-                createBasicRoutes() # Create a case statement which contains the code for the routes
+                createBasicRoutes()
                 createParameterRoutes()
+                # createRegexRoutes()
+                # If the route is not matched above then the afterwares are called and a 404 is sent
                 callAfterwares()
                 send(Http404)
-            
-            # if not request.finished:
-                
+            callAfterwares() # After wares are called down here as well so that they are called if the route is handled
+                    
             when defined(testing):
                 return request.response
         except:
