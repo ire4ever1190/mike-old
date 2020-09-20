@@ -11,6 +11,11 @@ srcDir        = "src"
 
 requires "nim >= 1.2.0"
 requires "httpx == 0.1.0"
+#[
+    Could be made to be an optional dependency that the user needs to install themselves
+    But for now I will have it has a requirement
+]#
+requires "regex == 0.16.2" 
 
 task r, "runs the example":
     exec("nim c -d:debug -r example")

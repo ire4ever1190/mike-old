@@ -1,6 +1,7 @@
 import httpcore
 import sets
 import tables
+import sugar
 import macros
 import httpcore
 import strutils
@@ -10,10 +11,11 @@ import regex
 
 # From looking at the docs it seems that compileTime for variables does not do what I thought it did
 # I need to make sure that these variables are not created at runtime since that would be a waste of space and memory
+# Might just have to clear them so atleast they are empty
 var 
-    routes         {.compileTime.} = initTable[string, NimNode]()
-    regexRoutes    {.compileTime.}: seq[(Regex, NimNode)]
-    variableRoutes {.compileTime.} = initTable[string, NimNode]() # Optional value routes
+    routes          {.compileTime.} = initTable[string, NimNode]()
+    regexRoutes     {.compileTime.} = initTable[string, NimNode]()
+    parameterRoutes {.compileTime.} = initTable[string, NimNode]()
 
 macro makeMethods(): untyped =
     ## **USED INTERNALLY**.
@@ -30,18 +32,18 @@ macro makeMethods(): untyped =
             
         result.add quote do:
             macro `macroIdent`* (route: untyped, body: untyped) =
+                body &= parseExpr("break routes") # early return
                 if route.kind == nnkCallStrLit:
                     if route[0].strVal == "re":
-                        let key = re(`methodString` & route[1].strVal())
-                        regexRoutes &= (key,  body)
+                        let key = `methodString` & route[1].strVal()
+                        regexRoutes[key] = body
                     else:
                         # echo is used instead of {.fatal.} since the fatal would be happen regardless
                         echo "ERROR: Invalid call in route. If you are doing a regex route then it must use 're' call"
                 else:
-                    echo(route.kind)
                     let key = `methodString` & route.strVal()
                     if route.strVal().contains("{"):
-                        variableRoutes[key] = body
+                        parameterRoutes[key] = body
                     else:
                         routes[key] = body
 #
@@ -82,7 +84,7 @@ proc putEnd(node: var Node, keys: openarray[string], value: NimNode) {.compileTi
 proc buildTree(): Node {.compileTime.} =
     ## Gets all the variable routes and puts them into a tree
     result = newNode()
-    for route, code in variableRoutes:
+    for route, code in parameterRoutes:
         result.putEnd(route.split('/'), code)
 
 #
@@ -91,12 +93,10 @@ proc buildTree(): Node {.compileTime.} =
 
 macro createBasicRoutes*(): untyped =
     ## **USED INTERNALLY**.
-    ## Gets all the routes from the global routes variable and puts them in a case tree.
-    # Build cases for normal routes
+    ## Gets all the routes from the global `routes` variable and puts them in a case tree.
     result = newStmtList()
     var routeCase = nnkCaseStmt.newTree(parseExpr("fullPath"))
     for (route, body) in routes.pairs:
-        body.add parseExpr("break routes")
         routeCase.add(
             nnkOfBranch.newTree(
                 newLit(route),
@@ -104,12 +104,11 @@ macro createBasicRoutes*(): untyped =
             )
         )
     result.add(routeCase)
-    #
-    # Build cases for variable routes
-    # TODO cleanup
     return routeCase
 
 macro createParameterRoutes*(): untyped =
+    ## **USED INTERNALLY**
+    ## Gets all the parameter routes that are specified in the global variable `parameterRoutes` and makes a complex case statement
     let variableRouteTree = buildTree()
     proc addCases(node: Node, i: int, completePath: string): NimNode = 
         ## Used has a recursive function. Creates the cases for the parameter routes
@@ -129,8 +128,7 @@ macro createParameterRoutes*(): untyped =
                             handler &= parseExpr(fmt"let {name} = routeComponents[{index}]")
     
                     handler &= newNode.value.get() # Add the code for the route
-                    handler &= parseExpr("break routes")
-                        
+                                            
                     result &= nnkElse.newTree(
                         # This if statement checks that the path is the the correct one that the user has specified
                         nnkIfStmt.newTree(
@@ -151,7 +149,7 @@ macro createParameterRoutes*(): untyped =
                     else:
                         result.add nnkOfBranch.newTree(newLit(path), addCases(newNode, i + 1, completePath & path & "/"))
 
-    return nnkTryStmt.newTree(
+    result = nnkTryStmt.newTree(
         newStmtList(
             parseExpr("let routeComponents = fullPath.split('/')"),
             addCases(variableRouteTree, 0, "")   
@@ -160,11 +158,71 @@ macro createParameterRoutes*(): untyped =
             An IndexDefect will be thrown if the user is trying to access a route where
             it was correct at the start but then they went over too much
         ]#
-        # This needs to be changed to allow yet another else case for regex routes
         nnkExceptBranch.newTree( 
-            newIdentNode((if declared(IndexDefect): "IndexDefect" else: "IndexError")), # IndexDefect is only in > 1.3 
-            parseExpr("send(Http404)")
+            newIdentNode((if declared(IndexDefect): "IndexDefect" else: "IndexError")), # IndexDefect is only in > 1.3
+            parseExpr("discard")
         )
     )
+    return result
     
+proc processPatterns(pattern: openarray[string]): (string, Table[int, int]) {.compileTime.} =
+    ## This processes multiple patterns into one long regex pattern
+    ## This means that an if statement is not required for every pattern
+    ## The table that is produced is has the offset has the key and the index that it relates to has the value
+    let captureRe = re"(\([^?][^\)]+\))" # A regex to match against capture groups
+    var 
+        currentIndex = 0
+        offset = 0
+    for part in pattern:
+        let count = part.findAll(captureRe).len()
+        result[0] &= part & "|"
+        result[1][offset] = currentIndex
+
+        currentIndex += 1
+        offset += count
+    result[0].removeSuffix("|")
+
+## TODO cleanup
+
+proc findNonEmptyIndexAndMatches*(inputList: seq[RegexMatch], path: string): (int, seq[string]) =
+    ## **USED INTERNALLY**
+    ## This finds the index of the first non empty regex match
+    ## It also returns all the matches
+    result[0] = -1
+    if inputList.len() == 0: return
+    let input = inputList[0] 
+    var index = 0
+    for match in input.captures:
+        if match.len() != 0:
+            if result[0] == -1:
+                result[0] = index
+            result[1] &= path[match[0]]
+        index += 1
+        
+macro createRegexRoutes*(): untyped =
+    # Possible optimisation, add a case statement and break the regex search into each method
+    # might help if someone has a lot of regex routes
+    let # toSeq was broken so I needed to do this to get the keys and values
+        keys = collect(newSeq):
+            for key in regexRoutes.keys:
+                key
+        values = collect(newSeq):
+            for value in regexRoutes.values:
+                value
+        (pattern, offsetTable) = processPatterns(keys)
+    result = newStmtList()
+    # I had to use this instead of quote since using quote made the index variable not available with the case statement
+    # I will use the with macro once it is available
+    result.add parseExpr("let regexRoutePattern {.global.} = re(" & '"' & pattern & "\")")
+    result.add parseExpr("let pathMatch = findAll(fullPath, regexRoutePattern)")
+    result.add parseExpr("let (nonEmptyIndex, matches) = findNonEmptyIndexAndMatches(pathMatch, fullPath)")
+    var index = 0
+    result.add nnkCaseStmt.newTree(ident("nonEmptyIndex"))
+    for (offset, index) in offsetTable.pairs:
+        result[^1].add nnkOfbranch.newTree(
+            newLit(offset),
+            values[index]
+        )
+    result[^1].add(nnkElse.newTree(parseExpr("send(Http404)")))
+        
 makeMethods()

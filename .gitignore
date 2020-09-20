@@ -2,3 +2,7 @@ example
 tests/test1
 *.nims
 tests/textExample
+benchmarks/lib
+benchmarks/shards.lock
+benchmarks/app
+benchmarks/benchmark

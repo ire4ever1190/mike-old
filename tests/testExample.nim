@@ -27,8 +27,9 @@ suite "Test GET handling":
         check(responseBody.name == "Fred")
 
     test "404":
-        let response = getMock("/404")
+        let response = getMock("/route404")
         check response.code == Http404
+        # check response.body == "This page does not exist. So this is a 404 error"
 
     test "Trailing slash":
         let response = getMock("/jsonresponse/")
@@ -84,7 +85,7 @@ suite "Test Cookies":
         check response.headers["set-cookie"] == "hasVisited=; Expires=Thu, 01 Jan 1970 00:00:00 GMT"
 
 suite "Pattern matching in routes":
-    test "variable values in routes":
+    test "Variable values in routes":
         let response = getMock("/person/john")
         check response.body == "Hello john"
 
@@ -96,3 +97,12 @@ suite "Pattern matching in routes":
         let response = getMock("/person/john/hello")
         check response.code == Http404
         check response.body != "7"
+
+suite "Regex":
+    test "Regex":
+        let response = getMock("/6")
+        check response.body == "6"
+
+    test "More complex route":
+        let response = getMock("/static_file/js/main")
+        check response.body == "main.js"

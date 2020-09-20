@@ -3,11 +3,15 @@ import src/mike/basicAuth
 import json
 import options
 import strformat
+import regex
 
 type
     Person* = object 
         name*: string
         age*:  int
+
+error 404:
+    send("This page does not exist. So this is a 404 error")
 
 get "/":
     # Just a basic request
@@ -65,8 +69,14 @@ get "/getcookie":
 get "/takecookie":
     request.delCookie("hasVisited")
     send(Http200)
-    
 
+
+get re"/(\\d)+$": # \\ is needed
+    send(matches[0])     
+       
+get re"/static_file/(\\w+)/(\\w+)$":
+    send(matches[1] & "." & matches[0])
+    
 beforeRequest:
     basicAuth(request, "user", "123")
     get "/private":

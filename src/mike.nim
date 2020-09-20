@@ -59,7 +59,7 @@ template startServer*(serverPort: int = 8080, numOfThreads: int = 1): untyped {.
                 callBeforewares()
                 createBasicRoutes()
                 createParameterRoutes()
-                # createRegexRoutes()
+                createRegexRoutes()
                 # If the route is not matched above then the afterwares are called and a 404 is sent
                 callAfterwares()
                 send(Http404)
@@ -71,7 +71,7 @@ template startServer*(serverPort: int = 8080, numOfThreads: int = 1): untyped {.
             let
                 e = getCurrentException()
                 msg = getCurrentExceptionMsg()
-            echo "Got exception ", e.name, " with message ", msg    
+            echo "Got exception ", e.name, " with message: ", msg
             send(Http500)
 
     when not defined(testing):

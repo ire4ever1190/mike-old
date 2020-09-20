@@ -16,6 +16,7 @@ import times
 let mimeDB = newMimeTypes() 
 
 proc headerToString(headers: HttpHeaders): string =
+    ## Converts HttpHeaders into their correct string representation
     var index = 0
     let finalIndex = len(headers) - 1
     for header in headers.pairs:
@@ -25,12 +26,33 @@ proc headerToString(headers: HttpHeaders): string =
             result &= "\c\L"
         index += 1
 
+# int64 is used over int since getting the intVal in the error macro returns BiggestInt type
+var errorHandleTable* {.compileTime.} = newTable[int64, NimNode]() 
+
+macro error*(code: int|HttpCode, body: untyped) =
+    echo("adding ")
+    errorHandleTable[code.intVal] = body
+
+
+macro createErrorHandle(): untyped =
+    result = nnkCaseStmt.newTree(ident("code"))
+    echo(errorHandleTable.len)
+    for key, value in errorHandleTable.pairs:
+        result.add nnkOfBranch.newTree(
+            newLit(key),
+            value
+        )
+    echo(toStrLit(result))
+
 proc send*(request: MikeRequest, body: string = "", code: HttpCode = Http200, headers: HttpHeaders = newHttpHeaders()) =
     ## Sends a response back to the request.
     # Merge the headers
     for (key, value) in headers.pairs:
             request.response.headers[key] = value
-
+    when errorHandleTable.len() != 0: # Only generate error handling if needed
+        if body == "": # Only send default error page if the body is empty
+            createErrorHandle()
+            
     when defined(testing):
         if not request.finished:
             request.response.body = body
@@ -39,7 +61,6 @@ proc send*(request: MikeRequest, body: string = "", code: HttpCode = Http200, he
     else:
         request.req.send(code, body, headerToString request.response.headers)
     request.finished = true # Allows to see if a 404 needs to be sent
-    # echo(request.finished)
 
 template send*(body: string, code: HttpCode = Http200, headers: HttpHeaders = newHttpHeaders()): untyped =
     ## Respond back to the request implicitly.
