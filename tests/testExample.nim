@@ -29,7 +29,11 @@ suite "Test GET handling":
     test "404":
         let response = getMock("/route404")
         check response.code == Http404
-        # check response.body == "This page does not exist. So this is a 404 error"
+
+    test "404 status page":
+        let response = getMock("/route404")
+        check response.code == Http404
+        check response.body == "This page does not exist. So this is a 404 error"
 
     test "Trailing slash":
         let response = getMock("/jsonresponse/")

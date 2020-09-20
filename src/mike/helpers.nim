@@ -27,32 +27,22 @@ proc headerToString(headers: HttpHeaders): string =
         index += 1
 
 # int64 is used over int since getting the intVal in the error macro returns BiggestInt type
-var errorHandleTable* {.compileTime.} = newTable[int64, NimNode]() 
+var errorHandleTable* = newTable[int64, proc (request: MikeRequest): string]() 
 
-macro error*(code: int|HttpCode, body: untyped) =
-    echo("adding ")
-    errorHandleTable[code.intVal] = body
+template status*(code: int|HttpCode, body: untyped): untyped {.dirty.} =
+    errorHandleTable[code] = proc (request: MikeRequest): string =
+        body
 
-
-macro createErrorHandle(): untyped =
-    result = nnkCaseStmt.newTree(ident("code"))
-    echo(errorHandleTable.len)
-    for key, value in errorHandleTable.pairs:
-        result.add nnkOfBranch.newTree(
-            newLit(key),
-            value
-        )
-    echo(toStrLit(result))
-
-proc send*(request: MikeRequest, body: string = "", code: HttpCode = Http200, headers: HttpHeaders = newHttpHeaders()) =
+proc send*(request: MikeRequest, responseBody: string = "", code: HttpCode = Http200, headers: HttpHeaders = newHttpHeaders()) =
     ## Sends a response back to the request.
     # Merge the headers
     for (key, value) in headers.pairs:
             request.response.headers[key] = value
-    when errorHandleTable.len() != 0: # Only generate error handling if needed
-        if body == "": # Only send default error page if the body is empty
-            createErrorHandle()
-            
+    var body = responseBody
+    # TODO find way to only have this be called if there is stuff to call
+    # If someone knows a way to have a macro be called last, please tell me
+    if errorHandleTable.hasKey(code.int64):
+        body = errorHandleTable[code.int64](request)
     when defined(testing):
         if not request.finished:
             request.response.body = body

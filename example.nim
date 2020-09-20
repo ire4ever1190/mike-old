@@ -10,8 +10,9 @@ type
         name*: string
         age*:  int
 
-error 404:
-    send("This page does not exist. So this is a 404 error")
+status 404:
+    # This needs to return a string. This is only called if there is no body in the response e.g. send(Http404)
+    "This page does not exist. So this is a 404 error"
 
 get "/":
     # Just a basic request
