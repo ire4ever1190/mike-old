@@ -229,6 +229,6 @@ macro createRegexRoutes*(): untyped =
             newLit(offset),
             values[index]
         )
-    result[^1].add(nnkElse.newTree(parseExpr("send(Http404)")))
+    result[^1].add(nnkElse.newTree(parseExpr("discard")))
     echo(result.toStrLit())        
 makeMethods()
