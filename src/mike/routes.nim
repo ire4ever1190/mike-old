@@ -94,6 +94,8 @@ proc buildTree(): Node {.compileTime.} =
 macro createBasicRoutes*(): untyped =
     ## **USED INTERNALLY**.
     ## Gets all the routes from the global `routes` variable and puts them in a case tree.
+    if routes.len() == 0:
+        return
     result = newStmtList()
     var routeCase = nnkCaseStmt.newTree(parseExpr("fullPath"))
     for (route, body) in routes.pairs:
@@ -109,6 +111,8 @@ macro createBasicRoutes*(): untyped =
 macro createParameterRoutes*(): untyped =
     ## **USED INTERNALLY**
     ## Gets all the parameter routes that are specified in the global variable `parameterRoutes` and makes a complex case statement
+    if parameterRoutes.len() == 0:
+        return
     let variableRouteTree = buildTree()
     proc addCases(node: Node, i: int, completePath: string): NimNode = 
         ## Used has a recursive function. Creates the cases for the parameter routes
@@ -202,6 +206,8 @@ proc findNonEmptyIndexAndMatches*(inputList: seq[RegexMatch], path: string): (in
 macro createRegexRoutes*(): untyped =
     # Possible optimisation, add a case statement and break the regex search into each method
     # might help if someone has a lot of regex routes
+    if regexRoutes.len() == 0:
+        return
     let # toSeq was broken so I needed to do this to get the keys and values
         keys = collect(newSeq):
             for key in regexRoutes.keys:
@@ -224,5 +230,5 @@ macro createRegexRoutes*(): untyped =
             values[index]
         )
     result[^1].add(nnkElse.newTree(parseExpr("send(Http404)")))
-        
+    echo(result.toStrLit())        
 makeMethods()
