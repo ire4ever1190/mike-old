@@ -37,9 +37,6 @@ macro makeMethods(): untyped =
                     if route[0].strVal == "re":
                         let key = `methodString` & route[1].strVal()
                         regexRoutes[key] = body
-                    else:
-                        # echo is used instead of {.fatal.} since the fatal would be happen regardless
-                        echo "ERROR: Invalid call in route. If you are doing a regex route then it must use 're' call"
                 else:
                     let key = `methodString` & route.strVal()
                     if route.strVal().contains("{"):
@@ -231,4 +228,5 @@ macro createRegexRoutes*(): untyped =
         )
     result[^1].add(nnkElse.newTree(parseExpr("discard")))
     echo(result.toStrLit())        
+
 makeMethods()
