@@ -89,6 +89,7 @@ Middleware
 Mike currently supports running code before a request is processed and after a response is sent
 
 .. code-block:: nim
+
     var callsCompleted = 0
     proc logCall(request: MikeRequest) =
         echo("Got call: " & request.path)
