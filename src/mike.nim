@@ -5,6 +5,7 @@ import options
 import strutils
 import asyncdispatch
 import sugar
+import regex
 import mike / [
     routes,
     helpers,
@@ -12,7 +13,8 @@ import mike / [
 ]
 when defined(testing):
     include mike/testing
-    
+
+export regex
 export helpers
 export routes
 export middleware
@@ -78,3 +80,4 @@ template startServer*(serverPort: int = 8080, numOfThreads: int = 1): untyped {.
         let settings = initSettings(Port(serverPort), numThreads = numOfThreads)
         echo("Mike is here to help on port " & $serverPort)
         run(handleRequest, settings = settings)
+        echo("stopping")

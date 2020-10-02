@@ -11,7 +11,12 @@ import regex
 
 # From looking at the docs it seems that compileTime for variables does not do what I thought it did
 # I need to make sure that these variables are not created at runtime since that would be a waste of space and memory
-# Might just have to clear them so atleast they are empty
+# Might just have to clear them so atleast they are empty. But I am pretty sure the compiler will remove them since they are unused at compileTime
+type 
+    Route = object
+        httpMethod: HttpMethod
+        
+
 var 
     routes          {.compileTime.} = initTable[string, NimNode]()
     regexRoutes     {.compileTime.} = initTable[string, NimNode]()
@@ -35,7 +40,10 @@ macro makeMethods(): untyped =
                 body &= parseExpr("break routes") # early return
                 if route.kind == nnkCallStrLit:
                     if route[0].strVal == "re":
-                        let key = `methodString` & route[1].strVal()
+                        # TODO rearrange the regex start and end string
+                        var path = route[1].strVal()
+                        # path.removePrefix("")
+                        let key = `methodString` & path
                         regexRoutes[key] = body
                 else:
                     let key = `methodString` & route.strVal()
@@ -166,7 +174,7 @@ macro createParameterRoutes*(): untyped =
     )
     return result
     
-proc processPatterns(pattern: openarray[string]): (string, Table[int, int]) {.compileTime.} =
+proc processRegexPatterns(pattern: openarray[string]): (string, Table[int, int]) {.compileTime.} =
     ## This processes multiple patterns into one long regex pattern
     ## This means that an if statement is not required for every pattern
     ## The table that is produced is has the offset has the key and the index that it relates to has the value
@@ -201,6 +209,12 @@ proc findNonEmptyIndexAndMatches*(inputList: seq[RegexMatch], path: string): (in
         index += 1
         
 macro createRegexRoutes*(): untyped =
+    #[
+      All the regex routes are joined into one big regex. This means that individual matches do not need to be done for every route
+      The way the router knows which regex was found is by first finding the offset for each capture and what route it relates to.
+      Lets say that we have the patterns /(\d+) and /(\w+)(\d)
+      if the first non empty match index is 1, then we know it is the second route
+    ]#
     # Possible optimisation, add a case statement and break the regex search into each method
     # might help if someone has a lot of regex routes
     if regexRoutes.len() == 0:
@@ -212,21 +226,19 @@ macro createRegexRoutes*(): untyped =
         values = collect(newSeq):
             for value in regexRoutes.values:
                 value
-        (pattern, offsetTable) = processPatterns(keys)
+        (pattern, offsetTable) = processRegexPatterns(keys)
     result = newStmtList()
     # I had to use this instead of quote since using quote made the index variable not available with the case statement
     # I will use the with macro once it is available
     result.add parseExpr("let regexRoutePattern {.global.} = re(" & '"' & pattern & "\")")
     result.add parseExpr("let pathMatch = findAll(fullPath, regexRoutePattern)")
     result.add parseExpr("let (nonEmptyIndex, matches) = findNonEmptyIndexAndMatches(pathMatch, fullPath)")
-    var index = 0
     result.add nnkCaseStmt.newTree(ident("nonEmptyIndex"))
     for (offset, index) in offsetTable.pairs:
         result[^1].add nnkOfbranch.newTree(
             newLit(offset),
             values[index]
         )
-    result[^1].add(nnkElse.newTree(parseExpr("discard")))
-    echo(result.toStrLit())        
+    result[^1].add(nnkElse.newTree(parseExpr("discard"))) # Ignore if it finds nothing
 
 makeMethods()

@@ -10,11 +10,38 @@ import mimetypes
 import asyncdispatch
 import httpx
 export request
+import strformat
 import cookies
 import times
+import sugar
+
 
 let mimeDB = newMimeTypes() 
 
+macro removeRequestParam*(prc: untyped): untyped =
+    ## Makes a template that removes the need to have the request parameter.
+    ## the MikeRequest parameter must be the first parameter if using this
+    result = newStmtList(prc)
+    var
+        params = prc[3][1..^1] # Remove the return type
+        callingVariables = collect(newSeq):
+            for i in params[1..^1]: ## Remove the request parameter
+                for ii in i[0..^3]: ## Remove the type
+                    ii.strVal
+    params[0] = newEmptyNode()
+    let k = callingVariables.join(", ")
+    result.add nnkTemplateDef.newTree(
+        nnkPostfix.newTree(ident("*"), prc.name),
+        newEmptyNode(),
+        newEmptyNode(),
+        nnkFormalParams.newTree(params),
+        newEmptyNode(),
+        newEmptyNode(),
+        parseStmt(
+            fmt"request.{prc.name}({k})"
+        )
+    )
+    
 proc headerToString(headers: HttpHeaders): string =
     ## Converts HttpHeaders into their correct string representation
     var index = 0
@@ -33,6 +60,7 @@ template status*(code: int|HttpCode, body: untyped): untyped {.dirty.} =
     errorHandleTable[code] = proc (request: MikeRequest): string =
         body
 
+# TODO remove the gcsafe error
 proc send*(request: MikeRequest, responseBody: string = "", code: HttpCode = Http200, headers: HttpHeaders = newHttpHeaders()) =
     ## Sends a response back to the request.
     # Merge the headers
@@ -117,12 +145,12 @@ proc form*(values: openarray[(string, string)]): string =
         result &= key & "=" & encodeUrl(value) & "&"
     result.removeSuffix("&")
 
-proc addCookie*(request: MikeRequest, key, value: string, domain = "", path = "", expires = "", secure = false, httpOnly = false) =
+proc addCookie*(request: MikeRequest, key, value: string, domain = "", path = "", expires = "", secure = false, httpOnly = false) {.removeRequestParam.}=
     ## Adds a cookie to the request which the client will set at their end
     let cookie = setCookie(key, value, domain, path, expires, true, secure, httpOnly)
     request.response.headers.add("Set-Cookie", cookie)
 
-proc addCookie*(request: MikeRequest, key, value: string, expires: DateTime|Time, domain = "", path = "", secure = false, httpOnly = false) =
+proc addCookie*(request: MikeRequest, key, value: string, expires: DateTime|Time, domain = "", path = "", secure = false, httpOnly = false) {.removeRequestParam.}=
     ## Adds a cookie to the request which the client will set at their end
     request.addCookie(
         key,
@@ -134,7 +162,7 @@ proc addCookie*(request: MikeRequest, key, value: string, expires: DateTime|Time
         httpOnly
     )
 
-proc delCookie*(request: MikeRequest, key: string) =
+proc delCookie*(request: MikeRequest, key: string) {.removeRequestParam.}=
     ## Deletes a cookie from the client
     request.addCookie(key, "", fromUnix(0))
 

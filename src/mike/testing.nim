@@ -1,23 +1,25 @@
 import httpcore
 import request
-    
-proc makeGetMock*(path: string, headers: HttpHeaders = newHttpHeaders()): MikeRequest =
-    return newRequest(
-        HttpGet,
-        path,
-        headers = headers
+
+proc t*(msg: string) =
+    echo(msg)
+
+
+template getMock*(path: string, requestHeaders: HttpHeaders = newHttpHeaders()): MikeResponse =
+    waitFor handleRequest(
+        newRequest(
+                HttpGet,
+                path,
+                headers = requestHeaders
+            )
+    )
+template postMock*(path, body: string, requestHeaders: HttpHeaders = newHttpHeaders()): MikeResponse =
+    waitFor handleRequest(
+        newRequest(
+            HttpPost,
+            path,
+            body,
+            headers = requestHeaders
+        )
     )
 
-template getMock*(path: string, headers: HttpHeaders = newHttpHeaders()): untyped =
-    waitFor handleRequest(makeGetMock(path, headers))
-
-proc makePostMock*(path, body: string, headers: HttpHeaders = newHttpHeaders()): MikeRequest =
-    return newRequest(
-        HttpPost,
-        path,
-        body,
-        headers
-    )
-
-template postMock*(path, body: string, headers: HttpHeaders = newHttpHeaders()): untyped =
-    waitFor handleRequest(makePostMock(path, body, headers))

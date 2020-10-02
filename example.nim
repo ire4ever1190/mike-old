@@ -64,11 +64,11 @@ get "/echocookie":
         send(Http400)
 
 get "/getcookie":
-    request.addCookie("hasVisited", $true)
+    addCookie("hasVisited", $true)
     send(Http200)
 
 get "/takecookie":
-    request.delCookie("hasVisited")
+    delCookie("hasVisited")
     send(Http200)
 
 
