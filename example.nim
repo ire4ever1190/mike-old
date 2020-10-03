@@ -87,10 +87,10 @@ beforeRequest:
         send "hello me again"
 
 get "/redirect":
-    redirect(request,"/")
+    redirect("/")
 
 get "/redirect303":
-    redirect(request,"/",Http303)
+    redirect("/",Http303)
 
 beforeRequest:
     # All calls in here are called before a request
