@@ -110,3 +110,14 @@ suite "Regex":
     test "More complex route":
         let response = getMock("/static_file/js/main")
         check response.body == "main.js"
+
+suite "Redirect":
+    test "Simple redirect":
+        let response = getMock("/redirect")
+        check response.code == Http301
+        check response.headers["Location"] == "/"
+
+    test "Redirect with custom code":
+        let response = getMock("/redirect303")
+        check response.code == Http303
+        check response.headers["Location"] == "/"

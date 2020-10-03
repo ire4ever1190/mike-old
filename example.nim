@@ -4,7 +4,7 @@ import json
 import options
 import strformat
 import regex
-
+import src/mike/redirects
 type
     Person* = object 
         name*: string
@@ -85,6 +85,12 @@ beforeRequest:
 
     get "/private2":
         send "hello me again"
+
+get "/redirect":
+    redirect("/")
+
+get "/redirect303":
+    redirect("/",Http303)
 
 beforeRequest:
     # All calls in here are called before a request
