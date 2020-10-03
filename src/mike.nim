@@ -9,7 +9,8 @@ import regex
 import mike / [
     routes,
     helpers,
-    middleware
+    middleware,
+    redirects
 ]
 when defined(testing):
     include mike/testing
@@ -17,6 +18,7 @@ when defined(testing):
 export regex
 export helpers
 export routes
+export redirects
 export middleware
 export json
 export sugar
