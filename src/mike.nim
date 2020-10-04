@@ -65,7 +65,6 @@ template startServer*(serverPort: int = 8080, numOfThreads: int = 1): untyped {.
                 createParameterRoutes()
                 createRegexRoutes()
                 # If the route is not matched above then the afterwares are called and a 404 is sent
-                callAfterwares()
                 send(Http404)
             callAfterwares() # After wares are called down here as well so that they are called if the route is handled
                     
