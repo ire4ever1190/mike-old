@@ -13,7 +13,9 @@ very simple to use web framework for easy prototyping and rapid development
     get "/":
         send "hello"
     
-    startServer()
+    startServer(1234) # Port by default is 8080 but you can change that
+    # you can also specify the number of threads when compiling with threads on
+    # startServer(numOfThreads=2) 
 
 `index <theindex.html>`__
 

@@ -45,7 +45,7 @@ macro mockable*(prc: untyped): untyped =
     else:
         result = prc
 
-template startServer*(serverPort: int = 8080, numOfThreads: int = 1): untyped {.dirty.} =                                    
+template startServer*(serverPort: int = 8080, numOfThreads: int = 0): untyped {.dirty.} =                                    
     ## Starts the server.
     ## Use this at the end of your main file to start the server.
     mikeCreateRegexPattern() # creates the global variable mikeRegexRoutePattern
