@@ -8,7 +8,7 @@ import strutils
 import strformat
 import options
 import regex
-
+import sequtils
 # From looking at the docs it seems that compileTime for variables does not do what I thought it did
 # I need to make sure that these variables are not created at runtime since that would be a waste of space and memory
 # Might just have to clear them so atleast they are empty. But I am pretty sure the compiler will remove them since they are unused at compileTime
@@ -174,7 +174,7 @@ macro createParameterRoutes*(): untyped =
     )
     return result
     
-proc processRegexPatterns(pattern: openarray[string]): (string, Table[int, int]) {.compileTime.} =
+proc processRegexPatterns(pattern: openarray[string]): Table[int, int] {.compileTime.} =
     ## This processes multiple patterns into one long regex pattern
     ## This means that an if statement is not required for every pattern
     ## The table that is produced is has the offset has the key and the index that it relates to has the value
@@ -184,12 +184,10 @@ proc processRegexPatterns(pattern: openarray[string]): (string, Table[int, int])
         offset = 0
     for part in pattern:
         let count = part.findAll(captureRe).len()
-        result[0] &= part & "|"
-        result[1][offset] = currentIndex
+        result[offset] = currentIndex
 
         currentIndex += 1
         offset += count
-    result[0].removeSuffix("|")
 
 ## TODO cleanup
 
@@ -206,8 +204,16 @@ proc findNonEmptyIndexAndMatches*(inputList: seq[RegexMatch], path: string): (in
             if result[0] == -1:
                 result[0] = index
             result[1] &= path[match[0]]
-        index += 1
-        
+        index += 1    
+
+macro mikeCreateRegexPattern*(): untyped =
+    ## **USED INTERNALLY**
+    ## compiles all the regex routes into one regex pattern which make the matching time faster
+    let 
+        routePatterns = toSeq(keys(regexRoutes))
+        pattern = routePatterns.join("|")
+    parseExpr &"const mikeRegexRoutePattern = re(\"{pattern}\")"
+
 macro createRegexRoutes*(): untyped =
     #[
       All the regex routes are joined into one big regex. This means that individual matches do not need to be done for every route
@@ -215,25 +221,19 @@ macro createRegexRoutes*(): untyped =
       Lets say that we have the patterns /(\d+) and /(\w+)(\d)
       if the first non empty match index is 1, then we know it is the second route
     ]#
-    # Possible optimisation, add a case statement and break the regex search into each method
-    # might help if someone has a lot of regex routes
     if regexRoutes.len() == 0:
         return
-    let # toSeq was broken so I needed to do this to get the keys and values
-        keys = collect(newSeq):
-            for key in regexRoutes.keys:
-                key
-        values = collect(newSeq):
-            for value in regexRoutes.values:
-                value
-        (pattern, offsetTable) = processRegexPatterns(keys)
-    result = newStmtList()
+    let
+        keys    = toSeq(keys(regexRoutes))
+        values  = toSeq(values(regexRoutes))
+        pattern = keys.join("|")
+        offsetTable = processRegexPatterns(keys)
     # I had to use this instead of quote since using quote made the index variable not available with the case statement
     # I will use the with macro once it is available
-    result.add parseExpr("let regexRoutePattern {.global.} = re(" & '"' & pattern & "\")")
-    result.add parseExpr("let pathMatch = findAll(fullPath, regexRoutePattern)")
+    result = newStmtList()
+    result.add parseExpr("let pathMatch = findAll(fullPath, mikeRegexRoutePattern)")
     result.add parseExpr("let (nonEmptyIndex, matches) = findNonEmptyIndexAndMatches(pathMatch, fullPath)")
-    result.add nnkCaseStmt.newTree(ident("nonEmptyIndex"))
+    result.add nnkCaseStmt.newTree(ident("nonEmptyIndex"))       
     for (offset, index) in offsetTable.pairs:
         result[^1].add nnkOfbranch.newTree(
             newLit(offset),

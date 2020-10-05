@@ -73,8 +73,8 @@ get "/takecookie":
 
 
 get re"/(\\d)+$": # \\ is needed
-    send(matches[0])     
-       
+    send(matches[0])
+    
 get re"/static_file/(\\w+)/(\\w+)$":
     send(matches[1] & "." & matches[0])
     
@@ -90,11 +90,11 @@ get "/redirect":
     redirect("/")
 
 get "/redirect303":
-    redirect("/",Http303)
+    redirect("/", Http303)
 
 beforeRequest:
     # All calls in here are called before a request
     # Their first parameter must be MikeRequest but you do not pass it here
     request.callLogging("Handling")
 
-startServer() # The callLogging middleware echos each request
+startServer(numOfThreads=4) # The callLogging middleware echos each request

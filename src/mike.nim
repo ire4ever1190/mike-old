@@ -6,8 +6,8 @@ import strutils
 import asyncdispatch
 import sugar
 import regex
+include mike/routes
 import mike / [
-    routes,
     helpers,
     middleware,
     redirects
@@ -17,7 +17,7 @@ when defined(testing):
 
 export regex
 export helpers
-export routes
+# export routes
 export redirects
 export middleware
 export json
@@ -48,6 +48,7 @@ macro mockable*(prc: untyped): untyped =
 template startServer*(serverPort: int = 8080, numOfThreads: int = 1): untyped {.dirty.} =                                    
     ## Starts the server.
     ## Use this at the end of your main file to start the server.
+    mikeCreateRegexPattern() # creates the global variable mikeRegexRoutePattern
     proc handleRequest*(req: Request): Future[void] {.mockable, async, gcsafe.} =
         when defined(testing):            
             request.response = newResponse()

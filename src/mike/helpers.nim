@@ -69,13 +69,13 @@ proc send*(request: MikeRequest, responseBody: string = "", code: HttpCode = Htt
     var body = responseBody
     # TODO find way to only have this be called if there is stuff to call
     # If someone knows a way to have a macro be called last, please tell me
-    if errorHandleTable.hasKey(code.int64):
-        body = errorHandleTable[code.int64](request)
+    {.gcsafe.}:
+        if errorHandleTable.hasKey(code.int64):
+            body = errorHandleTable[code.int64](request)
     when defined(testing):
         if not request.finished:
             request.response.body = body
             request.response.code = code
-
     else:
         request.req.send(code, body, headerToString request.response.headers)
     request.finished = true # Allows to see if a 404 needs to be sent

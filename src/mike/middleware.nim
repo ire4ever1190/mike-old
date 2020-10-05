@@ -34,7 +34,8 @@ template handleCalls(body: NimNode, calls: var NimNode, isBefore: bool): untyped
           The proc will be given a unique name by computing a hash consistening of the route paths  
         ]#
         let 
-            procName = $generateHash(procs)
+            procName = ident $generateHash(procs) # Generate a unique name
+            # procName = genSym(ident = "afterwares")
             call = newCall(
                 procName,
                 ident("request")
@@ -46,7 +47,7 @@ template handleCalls(body: NimNode, calls: var NimNode, isBefore: bool): untyped
                 procedure[2].add(call)
 
         procs &= newProc( # Create the new proc and add it to the procs list
-            newIdentNode(procName),
+            procName,
             params = [
                 newEmptyNode(),
                 newIdentDefs(
