@@ -49,7 +49,8 @@ A normal route is just a plain path with nothing fancy. It is defined like so.
         
 Parameter routes are routes that contain variables in them.
 
-.. code-block::
+.. code-block:: nim
+
     get "/account/{id}":
         send "Your ID is: " & id # The variable is automatically created
 
