@@ -64,15 +64,9 @@ function main() {
   <div class="container">
     <h1 class="title">Index</h1>
     Modules: <a href="mike.html">mike</a>, <a href="mike/helpers.html">mike/helpers</a>, <a href="mike/middleware.html">mike/middleware</a>, <a href="mike/request.html">mike/request</a>.<br/><p /><h2>API symbols</h2>
-<dl><dt><a name="addCookie" href="#addCookie"><span>addCookie:</span></a></dt><dd><ul class="simple">
+<dl><dt><a name="%60%24%60" href="#%60%24%60"><span>`$`:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="helpers: addCookie(request: MikeRequest; key, value: string; expires: DateTime | Time;
-          domain = &quot;&quot;; path = &quot;&quot;; secure = false; httpOnly = false)" href="mike/helpers.html#addCookie%2CMikeRequest%2Cstring%2Cstring%2C%2Cstring%2Cstring">helpers: addCookie(request: MikeRequest; key, value: string; expires: DateTime | Time;
-          domain = &quot;&quot;; path = &quot;&quot;; secure = false; httpOnly = false)</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="helpers: addCookie(request: MikeRequest; key, value: string; domain = &quot;&quot;; path = &quot;&quot;; expires = &quot;&quot;;
-          secure = false; httpOnly = false)" href="mike/helpers.html#addCookie%2CMikeRequest%2Cstring%2Cstring%2Cstring%2Cstring%2Cstring">helpers: addCookie(request: MikeRequest; key, value: string; domain = &quot;&quot;; path = &quot;&quot;; expires = &quot;&quot;;
-          secure = false; httpOnly = false)</a></li>
+          data-doc-search-tag="request: `$`(request: MikeRequest): string" href="mike/request.html#%24%2CMikeRequest">request: `$`(request: MikeRequest): string</a></li>
           </ul></dd>
 <dt><a name="addHeader" href="#addHeader"><span>addHeader:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -109,10 +103,6 @@ function main() {
 <dt><a name="callLogging" href="#callLogging"><span>callLogging:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="middleware: callLogging(request: MikeRequest; prefix: string = &quot;&quot;)" href="mike/middleware.html#callLogging%2CMikeRequest%2Cstring">middleware: callLogging(request: MikeRequest; prefix: string = &quot;&quot;)</a></li>
-          </ul></dd>
-<dt><a name="delCookie" href="#delCookie"><span>delCookie:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="helpers: delCookie(request: MikeRequest; key: string)" href="mike/helpers.html#delCookie%2CMikeRequest%2Cstring">helpers: delCookie(request: MikeRequest; key: string)</a></li>
           </ul></dd>
 <dt><a name="form" href="#form"><span>form:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -158,25 +148,35 @@ function main() {
 <li><a class="reference external"
           data-doc-search-tag="request: newResponse(): MikeResponse" href="mike/request.html#newResponse">request: newResponse(): MikeResponse</a></li>
           </ul></dd>
+<dt><a name="removeRequestParam" href="#removeRequestParam"><span>removeRequestParam:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="helpers: removeRequestParam(prc: untyped): untyped" href="mike/helpers.html#removeRequestParam.m%2Cuntyped">helpers: removeRequestParam(prc: untyped): untyped</a></li>
+          </ul></dd>
 <dt><a name="send" href="#send"><span>send:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="helpers: send(request: MikeRequest; reqBody: JsonNode; hCode: HttpCode = Http200)" href="mike/helpers.html#send%2CMikeRequest%2CJsonNode%2CHttpCode">helpers: send(request: MikeRequest; reqBody: JsonNode; hCode: HttpCode = Http200)</a></li>
           <li><a class="reference external"
-          data-doc-search-tag="helpers: send(request: MikeRequest; body: string = &quot;&quot;; code: HttpCode = Http200;
-     headers: HttpHeaders = newHttpHeaders())" href="mike/helpers.html#send%2CMikeRequest%2Cstring%2CHttpCode%2CHttpHeaders">helpers: send(request: MikeRequest; body: string = &quot;&quot;; code: HttpCode = Http200;
+          data-doc-search-tag="helpers: send(request: MikeRequest; responseBody: string = &quot;&quot;; code: HttpCode = Http200;
+     headers: HttpHeaders = newHttpHeaders())" href="mike/helpers.html#send%2CMikeRequest%2Cstring%2CHttpCode%2CHttpHeaders">helpers: send(request: MikeRequest; responseBody: string = &quot;&quot;; code: HttpCode = Http200;
      headers: HttpHeaders = newHttpHeaders())</a></li>
           <li><a class="reference external"
           data-doc-search-tag="helpers: send(code: HttpCode; headers: HttpHeaders = newHttpHeaders()): untyped" href="mike/helpers.html#send.t%2CHttpCode%2CHttpHeaders">helpers: send(code: HttpCode; headers: HttpHeaders = newHttpHeaders()): untyped</a></li>
           <li><a class="reference external"
           data-doc-search-tag="helpers: send(reqBody: JsonNode; hCode: HttpCode = Http200): untyped" href="mike/helpers.html#send.t%2CJsonNode%2CHttpCode">helpers: send(reqBody: JsonNode; hCode: HttpCode = Http200): untyped</a></li>
           <li><a class="reference external"
-          data-doc-search-tag="helpers: send(body: string; code: HttpCode = Http200; headers: HttpHeaders = newHttpHeaders()): untyped" href="mike/helpers.html#send.t%2Cstring%2CHttpCode%2CHttpHeaders">helpers: send(body: string; code: HttpCode = Http200; headers: HttpHeaders = newHttpHeaders()): untyped</a></li>
+          data-doc-search-tag="helpers: send(body: string; code: HttpCode = Http200;
+     headers: HttpHeaders = newHttpHeaders()): untyped" href="mike/helpers.html#send.t%2Cstring%2CHttpCode%2CHttpHeaders">helpers: send(body: string; code: HttpCode = Http200;
+     headers: HttpHeaders = newHttpHeaders()): untyped</a></li>
           <li><a class="reference external"
           data-doc-search-tag="helpers: send(reqBody: typed; hCode: HttpCode = Http200): untyped" href="mike/helpers.html#send.t%2Ctyped%2CHttpCode">helpers: send(reqBody: typed; hCode: HttpCode = Http200): untyped</a></li>
           </ul></dd>
 <dt><a name="startServer" href="#startServer"><span>startServer:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="mike: startServer(serverPort: int = 8080; numOfThreads: int = 1): untyped" href="mike.html#startServer.t%2Cint%2Cint">mike: startServer(serverPort: int = 8080; numOfThreads: int = 1): untyped</a></li>
+          data-doc-search-tag="mike: startServer(serverPort: int = 8080; numOfThreads: int = 0): untyped" href="mike.html#startServer.t%2Cint%2Cint">mike: startServer(serverPort: int = 8080; numOfThreads: int = 0): untyped</a></li>
+          </ul></dd>
+<dt><a name="status" href="#status"><span>status:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="helpers: status(code: int | HttpCode; body: untyped): untyped" href="mike/helpers.html#status.t%2C%2Cuntyped">helpers: status(code: int | HttpCode; body: untyped): untyped</a></li>
           </ul></dd>
 <dt><a name="toHeader" href="#toHeader"><span>toHeader:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -191,7 +191,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2020-09-16 13:18:24 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2020-10-08 06:04:34 UTC</small>
       </div>
     </div>
   </div>

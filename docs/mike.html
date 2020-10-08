@@ -109,7 +109,7 @@ function main() {
   <a class="reference reference-toplevel" href="#18" id="68">Templates</a>
   <ul class="simple simple-toc-section">
       <li><a class="reference" href="#startServer.t%2Cint%2Cint"
-    title="startServer(serverPort: int = 8080; numOfThreads: int = 1): untyped"><wbr />start<wbr />Server<span class="attachedType"></span></a></li>
+    title="startServer(serverPort: int = 8080; numOfThreads: int = 0): untyped"><wbr />start<wbr />Server<span class="attachedType"></span></a></li>
 
   </ul>
 </li>
@@ -130,7 +130,7 @@ function main() {
   <div class="section" id="6">
 <h1><a class="toc-backref" href="#6">Imports</a></h1>
 <dl class="item">
-<a class="reference external" href="mike/routes.html">mike/routes</a>, <a class="reference external" href="mike/helpers.html">mike/helpers</a>, <a class="reference external" href="mike/middleware.html">mike/middleware</a>
+<a class="reference external" href="mike/helpers.html">mike/helpers</a>, <a class="reference external" href="mike/middleware.html">mike/middleware</a>, <a class="reference external" href="mike/redirects.html">mike/redirects</a>
 </dl></div>
 <div class="section" id="17">
 <h1><a class="toc-backref" href="#17">Macros</a></h1>
@@ -141,9 +141,9 @@ function main() {
 
 Changes the handleRequest proc to use MockRequest Just changes the input and return type along with moving the async pragma 
 &nbsp;&nbsp;<a
-href="https://github.com/ire4ever1190/mike/tree/master/src/mike.nim#L27"
+href="https://github.com/ire4ever1190/mike/tree/master/src/mike.nim#L31"
 class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike.nim#L27" class="link-seesrc" target="_blank" >Edit</a>
+<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike.nim#L31" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 
@@ -152,14 +152,15 @@ class="link-seesrc" target="_blank">Source</a>
 <h1><a class="toc-backref" href="#18">Templates</a></h1>
 <dl class="item">
 <a id="startServer.t,int,int"></a>
-<dt><pre><span class="Keyword">template</span> <a href="#startServer.t%2Cint%2Cint"><span class="Identifier">startServer</span></a><span class="Other">(</span><span class="Identifier">serverPort</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">8080</span><span class="Other">;</span> <span class="Identifier">numOfThreads</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">1</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">dirty</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">template</span> <a href="#startServer.t%2Cint%2Cint"><span class="Identifier">startServer</span></a><span class="Other">(</span><span class="Identifier">serverPort</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">8080</span><span class="Other">;</span> <span class="Identifier">numOfThreads</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">dirty</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 Starts the server. Use this at the end of your main file to start the server.
 &nbsp;&nbsp;<a
-href="https://github.com/ire4ever1190/mike/tree/master/src/mike.nim#L44"
+href="https://github.com/ire4ever1190/mike/tree/master/src/mike.nim#L48"
 class="link-seesrc" target="_blank">Source</a>
-<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike.nim#L44" class="link-seesrc" target="_blank" >Edit</a>
+<a href="https://github.com/ire4ever1190/mike/edit/devel/src/mike.nim#L48" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 
@@ -167,7 +168,7 @@ class="link-seesrc" target="_blank">Source</a>
 <div class="section" id="19">
 <h1><a class="toc-backref" href="#19">Exports</a></h1>
 <dl class="item">
-<a href="mike/helpers.html#form"><span class="Identifier">form</span></a>, <a href="mike/request.html#MikeRequest"><span class="Identifier">MikeRequest</span></a>, <a href="mike/request.html#newRequest"><span class="Identifier">newRequest</span></a>, <a href="mike/helpers.html#send"><span class="Identifier">send</span></a>, <a href="mike/request.html#toRequest"><span class="Identifier">toRequest</span></a>, <a href="mike/helpers.html#send"><span class="Identifier">send</span></a>, <a href="mike/helpers.html#addHeader"><span class="Identifier">addHeader</span></a>, <a href="mike/helpers.html#delCookie"><span class="Identifier">delCookie</span></a>, <a href="mike/request.html#parsePath"><span class="Identifier">parsePath</span></a>, <a href="mike/helpers.html#json"><span class="Identifier">json</span></a>, <a href="mike/helpers.html#body"><span class="Identifier">body</span></a>, <a href="mike/request.html#MikeResponse"><span class="Identifier">MikeResponse</span></a>, <a href="mike/helpers.html#headers"><span class="Identifier">headers</span></a>, <a href="mike/helpers.html#json"><span class="Identifier">json</span></a>, <a href="mike/helpers.html#toHeader"><span class="Identifier">toHeader</span></a>, <a href="mike/helpers.html#send"><span class="Identifier">send</span></a>, <a href="mike/request.html#newResponse"><span class="Identifier">newResponse</span></a>, <a class="reference external" href="mike/request.html">mike/request</a>, <a href="mike/helpers.html#send"><span class="Identifier">send</span></a>, <a href="mike/helpers.html#send"><span class="Identifier">send</span></a>, <a href="mike/helpers.html#addCookie"><span class="Identifier">addCookie</span></a>, <a href="mike/helpers.html#form"><span class="Identifier">form</span></a>, <a href="mike/helpers.html#send"><span class="Identifier">send</span></a>, <a href="mike/helpers.html#headers"><span class="Identifier">headers</span></a>, <a href="mike/helpers.html#addCookie"><span class="Identifier">addCookie</span></a>, <a class="reference external" href="mike/helpers.html">mike/helpers</a>, <a href="mike/routes.html#createRoutes"><span class="Identifier">createRoutes</span></a>, <a class="reference external" href="mike/routes.html">mike/routes</a>, <a href="mike/middleware.html#beforeRequest"><span class="Identifier">beforeRequest</span></a>, <a href="mike/middleware.html#afterRequestCalls"><span class="Identifier">afterRequestCalls</span></a>, <a href="mike/middleware.html#callLogging"><span class="Identifier">callLogging</span></a>, <a href="mike/middleware.html#afterRequest"><span class="Identifier">afterRequest</span></a>, <a href="mike/middleware.html#callAfterwares"><span class="Identifier">callAfterwares</span></a>, <a href="mike/middleware.html#callBeforewares"><span class="Identifier">callBeforewares</span></a>, <a href="mike/middleware.html#insertBefore"><span class="Identifier">insertBefore</span></a>, <a class="reference external" href="mike/middleware.html">mike/middleware</a>, <a href="mike/middleware.html#beforeRequestCalls"><span class="Identifier">beforeRequestCalls</span></a>, <a href="mike/helpers.html#json"><span class="Identifier">json</span></a>, <a href="mike/helpers.html#json"><span class="Identifier">json</span></a>
+<a href="mike/helpers.html#form"><span class="Identifier">form</span></a>, <a href="mike/request.html#MikeRequest"><span class="Identifier">MikeRequest</span></a>, <a href="mike/request.html#newRequest"><span class="Identifier">newRequest</span></a>, <a href="mike/helpers.html#send"><span class="Identifier">send</span></a>, <a href="mike/request.html#toRequest"><span class="Identifier">toRequest</span></a>, <a href="mike/helpers.html#send"><span class="Identifier">send</span></a>, <a href="mike/helpers.html#addHeader"><span class="Identifier">addHeader</span></a>, <a href="mike/request.html#$"><span class="Identifier">$</span></a>, <a href="mike/helpers.html#json"><span class="Identifier">json</span></a>, <a href="mike/helpers.html#body"><span class="Identifier">body</span></a>, <a href="mike/helpers.html#status"><span class="Identifier">status</span></a>, <a href="mike/helpers.html#removeRequestParam"><span class="Identifier">removeRequestParam</span></a>, <a href="mike/helpers.html#json"><span class="Identifier">json</span></a>, <a href="mike/helpers.html#headers"><span class="Identifier">headers</span></a>, <a href="mike/request.html#parsePath"><span class="Identifier">parsePath</span></a>, <a href="mike/helpers.html#send"><span class="Identifier">send</span></a>, <a href="mike/request.html#newResponse"><span class="Identifier">newResponse</span></a>, <a href="mike/request.html#MikeResponse"><span class="Identifier">MikeResponse</span></a>, <a class="reference external" href="mike/request.html">mike/request</a>, <a href="mike/helpers.html#send"><span class="Identifier">send</span></a>, <a href="mike/helpers.html#send"><span class="Identifier">send</span></a>, <a href="mike/helpers.html#toHeader"><span class="Identifier">toHeader</span></a>, <a href="mike/helpers.html#form"><span class="Identifier">form</span></a>, <a href="mike/helpers.html#send"><span class="Identifier">send</span></a>, <a href="mike/helpers.html#headers"><span class="Identifier">headers</span></a>, <a class="reference external" href="mike/helpers.html">mike/helpers</a>, <a class="reference external" href="mike/redirects.html">mike/redirects</a>, <a href="mike/middleware.html#beforeRequest"><span class="Identifier">beforeRequest</span></a>, <a href="mike/middleware.html#afterRequestCalls"><span class="Identifier">afterRequestCalls</span></a>, <a href="mike/middleware.html#callLogging"><span class="Identifier">callLogging</span></a>, <a href="mike/middleware.html#afterRequest"><span class="Identifier">afterRequest</span></a>, <a href="mike/middleware.html#callAfterwares"><span class="Identifier">callAfterwares</span></a>, <a href="mike/middleware.html#callBeforewares"><span class="Identifier">callBeforewares</span></a>, <a href="mike/middleware.html#insertBefore"><span class="Identifier">insertBefore</span></a>, <a class="reference external" href="mike/middleware.html">mike/middleware</a>, <a href="mike/middleware.html#beforeRequestCalls"><span class="Identifier">beforeRequestCalls</span></a>, <a href="mike/helpers.html#json"><span class="Identifier">json</span></a>, <a href="mike/helpers.html#json"><span class="Identifier">json</span></a>
 </dl></div>
 
   </div>
@@ -177,7 +178,7 @@ class="link-seesrc" target="_blank">Source</a>
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2020-09-16 13:18:24 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2020-10-08 06:04:34 UTC</small>
       </div>
     </div>
   </div>

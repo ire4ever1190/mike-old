@@ -1,5 +1,7 @@
-send	mike/helpers.html#send,MikeRequest,string,HttpCode,HttpHeaders	helpers: send(request: MikeRequest; body: string = &quot;&quot;; code: HttpCode = Http200;\n     headers: HttpHeaders = newHttpHeaders())	
-send	mike/helpers.html#send.t,string,HttpCode,HttpHeaders	helpers: send(body: string; code: HttpCode = Http200; headers: HttpHeaders = newHttpHeaders()): untyped	
+removeRequestParam	mike/helpers.html#removeRequestParam.m,untyped	helpers: removeRequestParam(prc: untyped): untyped	
+status	mike/helpers.html#status.t,,untyped	helpers: status(code: int | HttpCode; body: untyped): untyped	
+send	mike/helpers.html#send,MikeRequest,string,HttpCode,HttpHeaders	helpers: send(request: MikeRequest; responseBody: string = &quot;&quot;; code: HttpCode = Http200;\n     headers: HttpHeaders = newHttpHeaders())	
+send	mike/helpers.html#send.t,string,HttpCode,HttpHeaders	helpers: send(body: string; code: HttpCode = Http200;\n     headers: HttpHeaders = newHttpHeaders()): untyped	
 send	mike/helpers.html#send.t,HttpCode,HttpHeaders	helpers: send(code: HttpCode; headers: HttpHeaders = newHttpHeaders()): untyped	
 body	mike/helpers.html#body.t	helpers: body(): untyped	
 headers	mike/helpers.html#headers.t	helpers: headers(): untyped	
@@ -12,7 +14,4 @@ send	mike/helpers.html#send,MikeRequest,JsonNode,HttpCode	helpers: send(request:
 send	mike/helpers.html#send.t,JsonNode,HttpCode	helpers: send(reqBody: JsonNode; hCode: HttpCode = Http200): untyped	
 send	mike/helpers.html#send.t,typed,HttpCode	helpers: send(reqBody: typed; hCode: HttpCode = Http200): untyped	
 form	mike/helpers.html#form,openArray[]	helpers: form(values: openArray[(string, string)]): string	
-addCookie	mike/helpers.html#addCookie,MikeRequest,string,string,string,string,string	helpers: addCookie(request: MikeRequest; key, value: string; domain = &quot;&quot;; path = &quot;&quot;; expires = &quot;&quot;;\n          secure = false; httpOnly = false)	
-addCookie	mike/helpers.html#addCookie,MikeRequest,string,string,,string,string	helpers: addCookie(request: MikeRequest; key, value: string; expires: DateTime | Time;\n          domain = &quot;&quot;; path = &quot;&quot;; secure = false; httpOnly = false)	
-delCookie	mike/helpers.html#delCookie,MikeRequest,string	helpers: delCookie(request: MikeRequest; key: string)	
 toHeader	mike/helpers.html#toHeader.c,openArray[]	helpers: toHeader(headers: openArray[(string, string)]): HttpHeaders	
