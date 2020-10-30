@@ -3,6 +3,7 @@ Mike, The Mikro web framework
 ******************************
 
 .. image:: https://github.com/ire4ever1190/mike/workflows/Tests/badge.svg
+.. image:: https://nimble.directory/ci/badges/mike/version.svg
 
 very simple to use web framework
 
